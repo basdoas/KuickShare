@@ -324,7 +324,7 @@ impl Service {
         self.core.lock().await.set_suspended(suspended);
     }
 
-    /// `info` keys: kind, state, device, pin, preview, payload_kind, files, text, trusted, always_accepted (strings), history_uid, total_bytes, ack_bytes (u64).
+    /// `info` keys: kind, state, device, pin, preview, payload_kind, files, saved_paths, text, trusted, always_accepted (strings), history_uid, total_bytes, ack_bytes (u64).
     #[zbus(signal)]
     async fn transfer_updated(
         emitter: &SignalEmitter<'_>,
@@ -372,6 +372,8 @@ pub struct TransferEvent {
     ack_bytes: u64,
     payload_kind: String,
     files: Vec<String>,
+    /// Where the received files were saved (not kept in the history).
+    saved_paths: Vec<String>,
     text: String,
     /// Name of the paired computer whose transfer was accepted automatically (empty otherwise).
     trusted: String,
@@ -422,6 +424,7 @@ impl TransferEvent {
             ack_bytes: meta.map_or(0, |m| m.ack_bytes),
             payload_kind: meta.map_or_else(String::new, |m| format!("{:?}", m.payload_kind)),
             files,
+            saved_paths: meta.map_or_else(Vec::new, |m| m.saved_paths.clone()),
             text,
             trusted: String::new(),
             always_accepted: String::new(),
@@ -449,6 +452,9 @@ impl TransferEvent {
         }
         if !newer.files.is_empty() {
             self.files.clone_from(&newer.files);
+        }
+        if !newer.saved_paths.is_empty() {
+            self.saved_paths.clone_from(&newer.saved_paths);
         }
         self.history_uid = self.history_uid.max(newer.history_uid);
         self.last_event = self.last_event.max(newer.last_event);
@@ -488,6 +494,7 @@ impl TransferEvent {
             ("payload_kind", Variant::from(self.payload_kind.as_str())),
             // One path or name per line.
             ("files", Variant::from(self.files.join("\n"))),
+            ("saved_paths", Variant::from(self.saved_paths.join("\n"))),
             ("text", Variant::from(self.text.as_str())),
             ("trusted", Variant::from(self.trusted.as_str())),
             ("history_uid", Variant::from(self.history_uid)),
@@ -1147,6 +1154,7 @@ mod tests {
                 payload: None,
                 total_bytes: 100,
                 ack_bytes: 40,
+                saved_paths: Vec::new(),
             }),
         };
         let event = TransferEvent::from_client("t2", &client);
@@ -1154,7 +1162,7 @@ mod tests {
         assert_eq!(event.pin, "1234");
         assert_eq!((event.total_bytes, event.ack_bytes), (100, 40));
         let info = event.info();
-        assert_eq!(info.len(), 13);
+        assert_eq!(info.len(), 14);
         assert_eq!(info["ack_bytes"], Variant::from(40u64));
     }
 
@@ -1236,6 +1244,19 @@ mod tests {
             ..Default::default()
         });
         assert!(snapshot.into_history_entry(1).trusted);
+    }
+
+    #[test]
+    fn saved_paths_survive_later_events() {
+        let mut snapshot = TransferEvent {
+            saved_paths: vec!["/d/a (1).txt".into()],
+            ..Default::default()
+        };
+        snapshot.merge(&TransferEvent::default());
+        assert_eq!(
+            snapshot.info()["saved_paths"],
+            Variant::from("/d/a (1).txt")
+        );
     }
 
     #[test]

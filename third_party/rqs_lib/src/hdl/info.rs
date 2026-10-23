@@ -65,4 +65,6 @@ pub struct TransferMetadata {
 
     pub total_bytes: u64,
     pub ack_bytes: u64,
+    /// Where the files of an inbound file transfer are saved (empty otherwise).
+    pub saved_paths: Vec<String>,
 }

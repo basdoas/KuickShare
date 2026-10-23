@@ -939,6 +939,7 @@ impl InboundRequest {
         if !introduction.file_metadata.is_empty() && introduction.text_metadata.is_empty() {
             trace!("process_introduction: handling file_metadata");
             let mut files_name = Vec::with_capacity(introduction.file_metadata.len());
+            let mut saved_paths = Vec::with_capacity(introduction.file_metadata.len());
             let mut total_bytes: u64 = 0;
 
             for file in &introduction.file_metadata {
@@ -988,6 +989,7 @@ impl InboundRequest {
                     info!("New destination: {:?}", dest);
                 }
 
+                saved_paths.push(dest.to_string_lossy().into_owned());
                 let info = InternalFileInfo {
                     payload_id: file.payload_id(),
                     file_url: dest,
@@ -1009,6 +1011,7 @@ impl InboundRequest {
                 pin_code: self.state.pin_code.clone(),
                 total_bytes,
                 ack_bytes: Default::default(),
+                saved_paths,
             };
 
             info!("Asking for user consent: {:?}", metadata);
@@ -1034,6 +1037,7 @@ impl InboundRequest {
                         payload: Default::default(),
                         total_bytes: Default::default(),
                         ack_bytes: Default::default(),
+                        saved_paths: Vec::new(),
                     };
 
                     info!("Asking for user consent: {:?}", metadata);
@@ -1058,6 +1062,7 @@ impl InboundRequest {
                         payload: Default::default(),
                         total_bytes: Default::default(),
                         ack_bytes: Default::default(),
+                        saved_paths: Vec::new(),
                     };
 
                     info!("Asking for user consent: {:?}", metadata);
@@ -1091,6 +1096,7 @@ impl InboundRequest {
                 payload: Default::default(),
                 total_bytes: Default::default(),
                 ack_bytes: Default::default(),
+                saved_paths: Vec::new(),
             };
 
             self.update_state(

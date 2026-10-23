@@ -21,6 +21,7 @@ KuickShare is GPL-3.0-or-later (see [LICENSE](LICENSE)). It builds on the projec
 | Bluetooth sender: windowed scan, L2CAP dial and bridge, BLE endpoints in `EndpointInfo` and `SendInfo` (new) | `src/hdl/ble_scan.rs`, `src/hdl/ble_send/`, `src/lib.rs`, `src/manager.rs`, `src/hdl/mdns_discovery.rs` |
 | BLE scanner removed (`src/hdl/ble.rs`, `btleplug`); periodic mDNS re-announce instead | `src/hdl/mdns.rs`, `src/lib.rs`, `Cargo.toml` |
 | Four fixes:<br>- mDNS ignores the hotspot subnet<br>- a send reads the phone's cancel or disconnection while it writes<br>- a phone known to advertise no PSM is dialled over GATT at once<br>- a pending BLE connect is cancelled when a dial ends | `src/hdl/mdns.rs`, `src/hdl/mdns_discovery.rs`, `src/hdl/outbound.rs`, `src/utils.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/` |
+| `TransferMetadata::saved_paths`: where an inbound file is saved | `src/hdl/info.rs`, `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | Per-chunk logs lowered to `trace` | `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | Formatting only | `src/hdl/mdns_discovery.rs`, `src/hdl/blea.rs` (comment) |
 

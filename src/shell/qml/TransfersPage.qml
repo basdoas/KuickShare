@@ -35,17 +35,42 @@ Kirigami.ScrollablePage {
     property var detailFiles: []
     property string detailText: ""
     property bool detailIsLink: false
-    readonly property int maxDetailRows: 5
+    // The dialog is centred and at most 3/5 of the window high: a fifth stays free above and below.
+    readonly property real detailsMaxHeight: Math.round((page.Window.height || 0) * 3 / 5)
+    // What is left for the files or the text once the title, the header row and the paddings are taken
+    // (an estimate in grid units, not measured).
+    readonly property real detailsBodyMax: Math.max(Kirigami.Units.gridUnit * 6, detailsMaxHeight - Kirigami.Units.gridUnit * 9)
 
     function showDetails(item) {
-        detailResult = stateText(item.transferState, item.kind, item.ackBytes, item.viaBluetooth);
-        detailSize = item.totalBytes > 0 ? core.formatSize(item.totalBytes) : "";
-        detailFiles = item.files.map(path => {
+        showInfo(item.transferId, {
+            state: item.transferState,
+            kind: item.kind,
+            ack_bytes: item.ackBytes,
+            total_bytes: item.totalBytes,
+            files: item.files.join("\n"),
+            text: item.shownText
+        });
+    }
+
+    // Opens the dialog for a transfer by id (used by the "View" action of a notification).
+    function showDetailsFor(id) {
+        const info = core.transfers.info(id);
+        if (info.state !== undefined) {
+            showInfo(id, info);
+        }
+    }
+
+    function showInfo(id, info) {
+        const files = info.files ? info.files.split("\n").filter(f => f.length > 0) : [];
+        const text = info.text && info.text.length > 0 ? info.text : (info.preview ?? "");
+        detailResult = stateText(info.state, info.kind, info.ack_bytes, id.startsWith("ble:"));
+        detailSize = info.total_bytes > 0 ? core.formatSize(info.total_bytes) : "";
+        detailFiles = files.map(path => {
             const name = path.substring(path.lastIndexOf("/") + 1);
             return {name: name, icon: core.iconForName(name)};
         });
-        detailText = item.shownText;
-        detailIsLink = item.files.length === 0 && /^https?:\/\/\S+$/i.test(item.shownText.trim());
+        detailText = files.length === 0 ? text : "";
+        detailIsLink = files.length === 0 && /^https?:\/\/\S+$/i.test(text.trim());
         detailsDialog.open();
     }
 
@@ -54,7 +79,8 @@ Kirigami.ScrollablePage {
         title: i18n("Transfer details")
         standardButtons: Kirigami.Dialog.NoButton
         footer: null
-        preferredWidth: Kirigami.Units.gridUnit * 22
+        preferredWidth: Math.min(page.Window.width - Kirigami.Units.gridUnit * 2, Kirigami.Units.gridUnit * 40)
+        maximumHeight: page.detailsMaxHeight
 
         // The dialog only sizes itself from an Item's implicitHeight; a layout alone gives a collapsed dialog.
         Item {
@@ -92,6 +118,28 @@ Kirigami.ScrollablePage {
                             }
                         }
                     }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    // As tall as the two lines on the left.
+                    QQC2.Button {
+                        visible: page.detailIsLink
+                        text: i18n("Open link")
+                        icon.name: "internet-services"
+                        Layout.fillHeight: true
+                        onClicked: page.core.openLink(page.detailText.trim())
+                    }
+                    QQC2.Button {
+                        visible: page.detailText.length > 0
+                        text: i18n("Copy")
+                        icon.name: "edit-copy"
+                        Layout.fillHeight: true
+                        onClicked: {
+                            page.core.copyToClipboard(page.detailText);
+                            page.toasts.show(Kirigami.MessageType.Positive, i18n("Copied to clipboard"), 1500);
+                        }
+                    }
                 }
 
                 Kirigami.Separator {
@@ -103,7 +151,7 @@ Kirigami.ScrollablePage {
                     id: filesScroll
 
                     visible: page.detailFiles.length > 0
-                    implicitHeight: Math.min(filesColumn.implicitHeight, page.maxDetailRows * filesColumn.rowHeight)
+                    implicitHeight: Math.min(filesColumn.implicitHeight, page.detailsBodyMax)
                     contentWidth: availableWidth
                     leftPadding: Kirigami.Units.largeSpacing
                     rightPadding: QQC2.ScrollBar.vertical ? QQC2.ScrollBar.vertical.implicitWidth : 0
@@ -157,37 +205,27 @@ Kirigami.ScrollablePage {
                     id: textScroll
 
                     visible: page.detailFiles.length === 0 && page.detailText.length > 0
-                    implicitHeight: Math.min(textLabel.implicitHeight, page.maxDetailRows * textMetrics.lineSpacing + Kirigami.Units.largeSpacing * 2)
+                    implicitHeight: Math.min(textLabel.implicitHeight, page.detailsBodyMax)
                     contentWidth: availableWidth
                     leftPadding: Kirigami.Units.largeSpacing
                     rightPadding: QQC2.ScrollBar.vertical ? QQC2.ScrollBar.vertical.implicitWidth : 0
                     Layout.fillWidth: true
 
-                    FontMetrics {
-                        id: textMetrics
-                    }
-
-                    QQC2.Label {
+                    // Read-only, but the text can be selected and copied.
+                    QQC2.TextArea {
                         id: textLabel
 
                         width: textScroll.availableWidth
                         text: page.detailText
+                        readOnly: true
+                        selectByMouse: true
                         wrapMode: Text.Wrap
-                        textFormat: Text.PlainText
+                        textFormat: TextEdit.PlainText
+                        background: null
                         topPadding: Kirigami.Units.largeSpacing
                         bottomPadding: Kirigami.Units.largeSpacing
+                        leftPadding: 0
                         color: page.detailIsLink ? Kirigami.Theme.linkColor : Kirigami.Theme.textColor
-                        font.underline: page.detailIsLink && detailHover.hovered
-
-                        HoverHandler {
-                            id: detailHover
-                            enabled: page.detailIsLink
-                            cursorShape: Qt.PointingHandCursor
-                        }
-                        TapHandler {
-                            enabled: page.detailIsLink
-                            onTapped: page.core.openLink(page.detailText.trim())
-                        }
                     }
                 }
             }

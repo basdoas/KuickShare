@@ -72,6 +72,11 @@ void TransferWatcher::onTransferChanged(const QString &id)
     const bool outbound = info.value(QStringLiteral("kind")).toString() == QLatin1String("outbound");
     const QString device = info.value(QStringLiteral("device")).toString();
     const QString preview = info.value(QStringLiteral("preview")).toString();
+    // Text and links have no files; the preview alone can be empty, so the payload decides.
+    const QString payloadKind = info.value(QStringLiteral("payload_kind")).toString();
+    const bool isText = payloadKind == QLatin1String("Text") || payloadKind == QLatin1String("Url") || payloadKind == QLatin1String("WiFi")
+                        || (payloadKind.isEmpty() && info.value(QStringLiteral("files")).toString().isEmpty()
+                            && (!preview.isEmpty() || !info.value(QStringLiteral("text")).toString().isEmpty()));
     const qulonglong total = info.value(QStringLiteral("total_bytes")).toULongLong();
     const qulonglong acked = info.value(QStringLiteral("ack_bytes")).toULongLong();
 
@@ -111,7 +116,7 @@ void TransferWatcher::onTransferChanged(const QString &id)
     {
         tracked.started = true;
     }
-    if (isTransferring(state) && total > 0 && preview.isEmpty())
+    if (isTransferring(state) && total > 0 && !isText)
     {
         if (tracked.job)
         {
@@ -167,13 +172,13 @@ void TransferWatcher::onTransferChanged(const QString &id)
     if (tracked.job)
     {
         // Nothing moved yet: the job only said "Connecting", the failure notification follows.
-        tracked.job->finish(success, (success && !outbound && preview.isEmpty()) || !tracked.started);
+        tracked.job->finish(success, (success && !outbound && !isText) || !tracked.started);
     }
 
     const QString who = device.isEmpty() ? i18n("a nearby device") : device;
     if (success && !outbound)
     {
-        notifyReceived(who, preview);
+        notifyReceived(id, who, info, isText);
     }
     else if (outbound && !tracked.started && (state == QLatin1String("Disconnected") || state == QLatin1String("Rejected")))
     {
@@ -221,31 +226,46 @@ void TransferWatcher::notifyConsent(const QString &id, const QString &device, co
     tracked.consent = notification;
 }
 
-void TransferWatcher::notifyReceived(const QString &who, const QString &preview)
+void TransferWatcher::notifyReceived(const QString &id, const QString &who, const QVariantMap &info, bool isText)
 {
     auto *notification = new KNotification(QStringLiteral("transferFinished"));
     notification->setIconName(QStringLiteral("io.github.the_beper.KuickShare"));
 
-    if (!preview.isEmpty())
+    const QString payloadKind = info.value(QStringLiteral("payload_kind")).toString();
+    const QString text = info.value(QStringLiteral("text")).toString().isEmpty() ? info.value(QStringLiteral("preview")).toString() : info.value(QStringLiteral("text")).toString();
+
+    if (isText)
     {
-        notification->setTitle(i18n("Text received"));
-        notification->setText(i18n("From %1:\n%2", who.toHtmlEscaped(), shortened(preview).toHtmlEscaped()));
-        auto *copy = notification->addAction(i18n("Copy"));
-        connect(copy, &KNotificationAction::activated, this, [preview]
-                { QGuiApplication::clipboard()->setText(preview); });
-        static const QRegularExpression link(QStringLiteral("^https?://\\S+$"), QRegularExpression::CaseInsensitiveOption);
-        if (link.match(preview.trimmed()).hasMatch())
+        static const QRegularExpression linkPattern(QStringLiteral("^https?://\\S+$"), QRegularExpression::CaseInsensitiveOption);
+        const bool isLink = payloadKind == QLatin1String("Url") || linkPattern.match(text.trimmed()).hasMatch();
+        notification->setTitle(isLink ? i18n("Link received") : i18n("Text received"));
+        notification->setText(i18n("From %1:\n%2", who.toHtmlEscaped(), shortened(text).toHtmlEscaped()));
+        auto *copy = notification->addAction(isLink ? i18n("Copy link") : i18n("Copy text"));
+        connect(copy, &KNotificationAction::activated, this, [text]
+                { QGuiApplication::clipboard()->setText(text); });
+        if (isLink)
         {
             auto *open = notification->addAction(i18n("Open link"));
-            connect(open, &KNotificationAction::activated, this, [preview]
-                    { QDesktopServices::openUrl(QUrl(preview.trimmed())); });
+            connect(open, &KNotificationAction::activated, this, [text]
+                    { QDesktopServices::openUrl(QUrl(text.trimmed())); });
         }
+        auto *view = notification->addAction(i18n("View"));
+        connect(view, &KNotificationAction::activated, this, [this, id]
+                { Q_EMIT viewRequested(id); });
     }
     else
     {
         const QString dir = m_core->downloadDir().isEmpty() ? QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) : m_core->downloadDir();
         notification->setTitle(i18n("Files received"));
         notification->setText(i18n("From %1", who.toHtmlEscaped()));
+        // Several files: only the folder makes sense.
+        const QStringList saved = info.value(QStringLiteral("saved_paths")).toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+        if (saved.size() == 1)
+        {
+            auto *openFile = notification->addAction(i18n("Open file"));
+            connect(openFile, &KNotificationAction::activated, this, [path = saved.first()]
+                    { QDesktopServices::openUrl(QUrl::fromLocalFile(path)); });
+        }
         auto *open = notification->addAction(i18n("Open folder"));
         connect(open, &KNotificationAction::activated, this, [dir]
                 { QDesktopServices::openUrl(QUrl::fromLocalFile(dir)); });

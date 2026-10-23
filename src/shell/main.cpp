@@ -174,6 +174,14 @@ int main(int argc, char *argv[])
     tray.setStandardActionsEnabled(false);
     QObject::connect(&tray, &KStatusNotifierItem::activateRequested, &app, showWindow);
 
+    QObject::connect(&transfers, &TransferWatcher::viewRequested, &app, [&](const QString &id)
+                     {
+        showWindow();
+        if (engine)
+        {
+            QMetaObject::invokeMethod(ensureWindow(), "showTransfer", Q_ARG(QVariant, id));
+        } });
+
     auto inWindow = [&](const char *function)
     {
         return [&, function]

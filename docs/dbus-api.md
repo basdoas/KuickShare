@@ -138,6 +138,7 @@ A restart of sharing (name, port, reset) forgets the discovered devices without 
 | `ack_bytes` | `t` | Bytes transferred so far |
 | `payload_kind` | `s` | `Files`, `Text`, `Url` or `WiFi`; empty if not known yet |
 | `files` | `s` | File names (inbound) or paths, one per line; empty for text |
+| `saved_paths` | `s` | Inbound files: where each one was saved (after any `name (1).ext` renaming), one path per line; empty otherwise |
 | `text` | `s` | Text or link; for `WiFi`, only the network name, never the password |
 | `trusted` | `s` | Set when the transfer was accepted without asking: the paired computer's name, or the device name for an always-accepted device. Empty otherwise |
 | `always_accepted` | `s` | Device name when the sender is on the always-accepted list; empty for a paired computer |

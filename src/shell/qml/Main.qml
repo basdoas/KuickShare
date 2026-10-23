@@ -87,6 +87,12 @@ Kirigami.ApplicationWindow {
         show("send");
         Qt.callLater(() => root.pageStack.currentItem?.pasteFromClipboard?.());
     }
+    // Shows the details of a transfer (the "View" action of a notification).
+    function showTransfer(id) {
+        startPage = "transfers";
+        show("transfers");
+        Qt.callLater(() => root.pageStack.currentItem?.showDetailsFor?.(id));
+    }
     function showSettings() {
         show("settings");
     }

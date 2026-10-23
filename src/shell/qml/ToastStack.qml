@@ -4,14 +4,14 @@ import QtQuick.Controls as QQC2
 import org.kde.kirigami as Kirigami
 
 // Short coloured messages over the window: each one slides up from the bottom edge, older ones are pushed
-// up, and every message disappears by itself after its time (or when closed).
+// up, and every message slides back down by itself after its time (or when clicked).
 Item {
     id: stack
 
     readonly property int maxVisible: 4
     property int lastId: 0
 
-    // `type` is a Kirigami.MessageType; a message that stays 3 s or less has no close button.
+    // `type` is a Kirigami.MessageType.
     function show(type, text, timeout) {
         if (model.count >= maxVisible) {
             model.remove(model.count - 1);
@@ -77,11 +77,20 @@ Item {
                 easing.type: Easing.OutCubic
             }
         }
+        // The mirror of `add`: slides down and fades out.
         remove: Transition {
-            NumberAnimation {
-                property: "opacity"
-                to: 0
-                duration: Kirigami.Units.shortDuration
+            ParallelAnimation {
+                NumberAnimation {
+                    property: "y"
+                    to: ViewTransition.item.y + Kirigami.Units.gridUnit * 4
+                    duration: Kirigami.Units.longDuration
+                    easing.type: Easing.InCubic
+                }
+                NumberAnimation {
+                    property: "opacity"
+                    to: 0
+                    duration: Kirigami.Units.longDuration
+                }
             }
         }
 
@@ -94,15 +103,14 @@ Item {
             required property int timeout
 
             width: ListView.view.width
-            // Hidden by default; the close button hides it again.
             visible: true
             type: kind
             text: body
-            showCloseButton: timeout > 3000
-            onVisibleChanged: {
-                if (!visible) {
-                    Qt.callLater(stack.dismiss, uid);
-                }
+            showCloseButton: false
+
+            // A click closes the message before its time.
+            TapHandler {
+                onTapped: stack.dismiss(toast.uid)
             }
 
             Timer {

@@ -150,6 +150,7 @@ impl OutboundRequest {
                 payload_preview: Default::default(),
                 total_bytes: Default::default(),
                 ack_bytes: Default::default(),
+                saved_paths: Vec::new(),
             },
             OutboundPayload::Text { text, text_type } => {
                 let (payload_kind, transfer_payload) = match text_type {
@@ -174,6 +175,7 @@ impl OutboundRequest {
                     payload_preview: Some(create_text_preview(text, 32).clone()),
                     total_bytes: text.len() as u64,
                     ack_bytes: Default::default(),
+                    saved_paths: Vec::new(),
                 }
             }
         };

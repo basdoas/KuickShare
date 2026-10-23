@@ -19,6 +19,10 @@ class TransferWatcher : public QObject
 public:
     explicit TransferWatcher(CoreBridge *core, QObject *parent = nullptr);
 
+Q_SIGNALS:
+    // The user clicked "View" on a text or link notification.
+    void viewRequested(const QString &id);
+
 private:
     struct Tracked
     {
@@ -35,7 +39,7 @@ private:
     void onSendRequested(const QString &id, const QString &device, int files);
     void onSendRefused(const QString &id);
     void notifyConsent(const QString &id, const QString &device, const QString &pin, Tracked &tracked);
-    void notifyReceived(const QString &device, const QString &preview);
+    void notifyReceived(const QString &id, const QString &device, const QVariantMap &info, bool isText);
     void notifyProblem(const QString &eventId, const QString &title, const QString &text);
 
     CoreBridge *m_core;

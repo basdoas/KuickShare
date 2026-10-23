@@ -82,9 +82,16 @@ impl Service {
     }
 
     /// Looks for nearby phones over Bluetooth once more (a few seconds); needs the Wi-Fi upgrade
-    /// and a Bluetooth adapter, otherwise it silently finds nothing.
+    /// and a Bluetooth adapter, otherwise it silently finds nothing. The devices found over the
+    /// LAN that no longer answer are dropped (`DeviceLost`) after the scan starts, before it returns.
     async fn scan_bluetooth(&self) -> fdo::Result<()> {
-        self.core.lock().await.scan_bluetooth().map_err(failed)
+        let (endpoints, conn) = {
+            let core = self.core.lock().await;
+            core.scan_bluetooth().map_err(failed)?;
+            core.lan_handles()
+        };
+        crate::app::drop_unreachable_lan(endpoints, conn).await;
+        Ok(())
     }
 
     async fn stop_discovery(&self) {
@@ -740,6 +747,27 @@ fn incoming_file_names(client: &MessageClient) -> &[String] {
 /// mDNS instance name every few seconds, which looks like "lost" followed by "found".
 const LOST_GRACE: Duration = Duration::from_secs(4);
 
+/// The LAN entries a newly seen LAN device replaces: same address, name and type under another
+/// id. A restarted app takes a new port and mDNS name, and the old announcement lingers.
+fn superseded<'a>(
+    known: impl Iterator<Item = &'a EndpointInfo>,
+    new: &EndpointInfo,
+) -> Vec<String> {
+    if new.ble.is_some() || new.ip.is_none() || new.name.is_none() {
+        return Vec::new();
+    }
+    known
+        .filter(|e| {
+            e.ble.is_none()
+                && e.id != new.id
+                && e.ip == new.ip
+                && e.name == new.name
+                && e.rtype == new.rtype
+        })
+        .map(|e| e.id.clone())
+        .collect()
+}
+
 /// Tracks the latest sighting of each device so a delayed removal can tell if it is stale.
 #[derive(Default)]
 struct Presence(HashMap<String, u64>);
@@ -812,10 +840,15 @@ async fn forward_devices(
         // A vanished device is an endpoint with only its id set (mDNS) or `present` false (Bluetooth).
         if endpoint.present == Some(true) {
             presence.lock().unwrap().seen(&endpoint.id);
-            endpoints
-                .lock()
-                .unwrap()
-                .insert(endpoint.id.clone(), endpoint.clone());
+            let replaced = {
+                let mut endpoints = endpoints.lock().unwrap();
+                let replaced = superseded(endpoints.values(), &endpoint);
+                for id in &replaced {
+                    endpoints.remove(id);
+                }
+                endpoints.insert(endpoint.id.clone(), endpoint.clone());
+                replaced
+            };
             let known_trust = match &endpoint.ip {
                 Some(ip) if trusted_ips.lock().unwrap().contains(ip) => "trusted",
                 _ => "",
@@ -831,6 +864,16 @@ async fn forward_devices(
             };
             if let Err(e) = emitted.await {
                 tracing::warn!("failed to emit DeviceFound: {e}");
+            }
+            // After DeviceFound, so the list swaps the entry instead of flickering. The new entry
+            // has not been checked as a KuickShare computer yet: probe its address again.
+            for id in &replaced {
+                emit_device_lost(&connection, id).await;
+            }
+            if !replaced.is_empty()
+                && let Some(ip) = &endpoint.ip
+            {
+                probed.remove(ip);
             }
 
             // A phone seen only over Bluetooth: ask the core to keep searching the LAN. Spawned,
@@ -1006,6 +1049,24 @@ mod tests {
     };
 
     use super::*;
+
+    #[test]
+    fn a_new_announcement_replaces_the_old_ones_of_the_same_device() {
+        let lan = |id: &str, ip: &str, name: &str| EndpointInfo {
+            id: id.into(),
+            ip: Some(ip.into()),
+            name: Some(name.into()),
+            ..EndpointInfo::default()
+        };
+        let old = lan("10.0.0.5:4000", "10.0.0.5", "PC");
+        let other_host = lan("10.0.0.6:4000", "10.0.0.6", "PC");
+        let other_name = lan("10.0.0.5:4002", "10.0.0.5", "Phone");
+        let new = lan("10.0.0.5:4001", "10.0.0.5", "PC");
+        let known = [old, other_host, other_name, new.clone()];
+        assert_eq!(superseded(known.iter(), &new), ["10.0.0.5:4000"]);
+        let unnamed = EndpointInfo { name: None, ..new };
+        assert!(superseded(known.iter(), &unnamed).is_empty());
+    }
 
     fn ble_endpoint(present: bool) -> EndpointInfo {
         EndpointInfo {

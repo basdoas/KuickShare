@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.1
+
+- The Send list no longer keeps stale entries of a computer whose KuickShare was restarted: a new announcement with the same address, name and type replaces the old one.
+- With Wi-Fi Direct on, the refresh button of the Send list also drops the devices on the network that no longer answer, such as a phone whose Wi-Fi was turned off, instead of waiting for their announcements to expire.
+
 ## 1.2.0
 
 - **Send to and receive from a phone that shares no network with the computer (experimental, off by default).** The new **Wi-Fi Direct** section of Preferences finds the phone over Bluetooth and moves the transfer to a temporary Wi-Fi link: when receiving, the computer hosts a hotspot; when sending, it joins the group the phone offers. It needs NetworkManager, its `dnsmasq` package and Bluetooth, and was tried with a Pixel 7 and a Galaxy A55 (Samsung Quick Share). The requirements and limits are in [docs/wifi-direct.md](docs/wifi-direct.md); a Help section explains it in the app.

@@ -426,6 +426,11 @@ impl Core {
         engine.rqs.scan_ble(engine.discovery_tx.clone())
     }
 
+    /// What `drop_unreachable_lan` needs, so that the caller can release the `Core` lock first.
+    pub fn lan_handles(&self) -> (Endpoints, Option<Connection>) {
+        (self.endpoints.clone(), self.conn.clone())
+    }
+
     /// The last network connection is gone: the devices found over the LAN cannot be reached any
     /// more, so they are dropped now instead of when their mDNS records expire, and a Bluetooth
     /// scan looks for the phones that remain.
@@ -902,6 +907,36 @@ fn unique_match<'a>(
     found.next().is_none().then_some(first)
 }
 
+/// Probes every device found over the LAN at once and drops the ones that do not answer (a phone
+/// whose Wi-Fi went off sends no mDNS goodbye). A device that fails is probed once more (a lost SYN
+/// is not a gone phone), again all at once, before it is dropped. Takes about two `PROBE_TIMEOUT` at most.
+pub async fn drop_unreachable_lan(endpoints: Endpoints, conn: Option<Connection>) {
+    let mut suspects: Vec<EndpointInfo> = endpoints
+        .lock()
+        .unwrap()
+        .values()
+        .filter(|endpoint| endpoint.ble.is_none())
+        .cloned()
+        .collect();
+    for _ in 0..2 {
+        let alive = futures_util::future::join_all(
+            suspects
+                .iter()
+                .map(|e| async move { probe(&lan_addr(e)).await }),
+        )
+        .await;
+        let mut alive = alive.into_iter();
+        suspects.retain(|_| !alive.next().unwrap_or(true));
+    }
+    for endpoint in &suspects {
+        if endpoints.lock().unwrap().remove(&endpoint.id).is_some()
+            && let Some(conn) = &conn
+        {
+            dbus::emit_device_lost(conn, &endpoint.id).await;
+        }
+    }
+}
+
 /// `ip:port` of a device found over the LAN.
 fn lan_addr(endpoint: &EndpointInfo) -> String {
     format!(
@@ -1093,6 +1128,32 @@ mod tests {
         let mut endpoints = HashMap::from([(lan.id.clone(), lan), (ble.id.clone(), ble)]);
         assert_eq!(take_lan_endpoints(&mut endpoints), ["10.0.0.5:4000"]);
         assert_eq!(endpoints.keys().collect::<Vec<_>>(), ["ble:G483"]);
+    }
+
+    #[tokio::test]
+    async fn a_refresh_drops_only_the_lan_devices_that_do_not_answer() {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let live_port = listener.local_addr().unwrap().port();
+        let dead_port = {
+            let closed = std::net::TcpListener::bind("127.0.0.1:0").unwrap();
+            closed.local_addr().unwrap().port()
+        };
+        let lan = |id: &str, port: u16| EndpointInfo {
+            id: id.into(),
+            ip: Some("127.0.0.1".into()),
+            port: Some(port.to_string()),
+            ..EndpointInfo::default()
+        };
+        let ble = named("ble:G483", "Pixel", true);
+        let endpoints: Endpoints = Arc::new(StdMutex::new(HashMap::from([
+            ("live".to_string(), lan("live", live_port)),
+            ("dead".to_string(), lan("dead", dead_port)),
+            (ble.id.clone(), ble),
+        ])));
+        drop_unreachable_lan(endpoints.clone(), None).await;
+        let mut left: Vec<String> = endpoints.lock().unwrap().keys().cloned().collect();
+        left.sort();
+        assert_eq!(left, ["ble:G483", "live"]);
     }
 
     fn named(id: &str, name: &str, ble: bool) -> EndpointInfo {

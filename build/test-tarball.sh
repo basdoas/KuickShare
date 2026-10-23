@@ -1,7 +1,7 @@
 #!/bin/sh
 # Smoke test of the tarball installer in the build container (it has the Qt 6 / KF6 libraries the host build needs),
 # with a throw-away HOME: install, update, start the binaries, uninstall with --purge and check nothing is left.
-#   build/test-tarball.sh dist/KuickShare-<version>-x86_64.tar.gz
+#   build/test-tarball.sh dist/KuickShare-x86_64.tar.gz
 set -eu
 root=$(cd "$(dirname "$0")/.." && pwd)
 if [ ! -e /run/.containerenv ]; then

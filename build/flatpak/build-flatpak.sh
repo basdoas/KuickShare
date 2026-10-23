@@ -1,5 +1,5 @@
 #!/bin/sh
-# Builds an OSTree repository (dist/flatpak-repo, or $KUICKSHARE_FLATPAK_REPO) and dist/KuickShare-<version>.flatpak
+# Builds an OSTree repository (dist/flatpak-repo, or $KUICKSHARE_FLATPAK_REPO) and dist/KuickShare-x86_64.flatpak
 # inside a throw-away container. Runtimes and the Flatpak build cache live in the podman volume "kuickshare-flatpak", not on the host.
 # Usage: build/flatpak/build-flatpak.sh [flatpak-builder options...]
 set -eu
@@ -36,5 +36,5 @@ flatpak-builder --force-clean --disable-rofiles-fuse --install-deps-from=flathub
     --state-dir="$builder/state" --repo="$repo" "$@" \
     "$builder/build" "$id.yml"
 cd "$root"
-flatpak build-bundle "$repo" "dist/KuickShare-$version.flatpak" "$id" stable
-echo "Built dist/KuickShare-$version.flatpak"
+flatpak build-bundle "$repo" dist/KuickShare-x86_64.flatpak "$id" stable
+echo "Built dist/KuickShare-x86_64.flatpak"

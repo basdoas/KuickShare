@@ -26,8 +26,8 @@ build/build-env.sh cargo build
 build/build-env.sh sh -c 'cmake -S src/shell -B dist/tmp/cmake-dev -G Ninja && cmake --build dist/tmp/cmake-dev'
 build/build-appimage.sh    # dist/KuickShare-x86_64.AppImage and .zsync (Fedora and Arch images; first run is long)
 build/appimage/test-appimage.sh dist/KuickShare-x86_64.AppImage
-build/build-tarball.sh && build/test-tarball.sh dist/KuickShare-<version>-x86_64.tar.gz
-build/flatpak/build-flatpak.sh && build/flatpak/test-flatpak.sh dist/KuickShare-<version>.flatpak
+build/build-tarball.sh && build/test-tarball.sh dist/KuickShare-x86_64.tar.gz
+build/flatpak/build-flatpak.sh && build/flatpak/test-flatpak.sh dist/KuickShare-x86_64.flatpak
 ```
 
 The Flatpak build runs in its own container image (`build/flatpak/Containerfile`, started with `--privileged` for bwrap). The KDE runtime, about 2 GB, and the build cache are kept in the podman volume `kuickshare-flatpak`; `podman volume rm kuickshare-flatpak` removes them. Nothing is installed on the host.

@@ -405,7 +405,7 @@ The manifest is [`build/flatpak/io.github.the_beper.KuickShare.yml`](../build/fl
 flowchart LR
     A["build/flatpak/build-flatpak.sh"] -->|"runs in"| B["podman image, Fedora 44 (build/flatpak/Containerfile)"]
     B --> C["flatpak-builder: KDE 6.11 SDK, rust-stable"]
-    C --> D["OSTree repo + dist/KuickShare-VERSION.flatpak"]
+    C --> D["OSTree repo + dist/KuickShare-x86_64.flatpak"]
     D -->|"release.yml: sign, publish-repo.sh"| E["GitHub Pages: repo/, .flatpakrepo, .flatpakref"]
 ```
 

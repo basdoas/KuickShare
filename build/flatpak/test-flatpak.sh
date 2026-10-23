@@ -4,7 +4,7 @@
 # check the core answers on D-Bus, the tray item registers, the Dolphin entry lands in the host folder, and file
 # forwarding hands a file to the sandbox. Notifications, job progress, the file chooser and Dolphin itself need a
 # real Plasma session.
-# Usage: build/flatpak/test-flatpak.sh dist/KuickShare-<version>.flatpak
+# Usage: build/flatpak/test-flatpak.sh dist/KuickShare-x86_64.flatpak
 set -eu
 root=$(cd "$(dirname "$0")/../.." && pwd)
 image=localhost/kuickshare-flatpak:fedora44

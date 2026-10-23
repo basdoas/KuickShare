@@ -26,7 +26,7 @@ flatpak remote-add --user --if-not-exists kuickshare https://the-beper.github.io
 flatpak install --user kuickshare io.github.the_beper.KuickShare
 ```
 
-The software center can add the repository from the same `.flatpakrepo` file. Updates come with `flatpak update` or the software center. A `.flatpak` bundle is also attached to each release (`flatpak install --user KuickShare-<version>.flatpak`).
+The software center can add the repository from the same `.flatpakrepo` file. Updates come with `flatpak update` or the software center. A `.flatpak` bundle is also attached to each release (`flatpak install --user KuickShare-x86_64.flatpak`).
 
 | Command | Effect |
 |---|---|
@@ -87,7 +87,7 @@ To install KuickShare into `~/.local` with the system's libraries instead, use t
 For people who want neither the AppImage nor the Flatpak. It holds the program built against the system's Qt 6 and KDE Frameworks 6, and an installer that copies it into `~/.local`; afterwards the extracted folder can be deleted.
 
 ```sh
-tar xf KuickShare-<version>-x86_64.tar.gz
+tar xf KuickShare-x86_64.tar.gz
 KuickShare-<version>/install.sh
 ```
 

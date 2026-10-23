@@ -100,7 +100,7 @@ jobs:
       - name: Test
         run: |
           build/appimage/test-appimage.sh dist/KuickShare-x86_64.AppImage
-          build/test-tarball.sh dist/KuickShare-*-x86_64.tar.gz
+          build/test-tarball.sh dist/KuickShare-x86_64.tar.gz
 
   flatpak:
     runs-on: ubuntu-latest
@@ -126,4 +126,4 @@ jobs:
       - name: Smoke test
         run: |
           mkdir -p -m 700 /run/user/0
-          XDG_RUNTIME_DIR=/run/user/0 dbus-run-session -- build/flatpak/test-flatpak.sh dist/KuickShare-*.flatpak
+          XDG_RUNTIME_DIR=/run/user/0 dbus-run-session -- build/flatpak/test-flatpak.sh dist/KuickShare-x86_64.flatpak

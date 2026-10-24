@@ -82,6 +82,40 @@ int main(int argc, char *argv[])
     DndWatcher dnd(&core);
 
     std::unique_ptr<QQmlApplicationEngine> engine;
+
+    // An update installed under a running instance: start the new version once idle (no transfer, window closed).
+    UpdateWatcher updates;
+    bool updatePending = false;
+    bool replacing = false;
+    QTimer restartWhenIdle;
+    restartWhenIdle.setInterval(30000);
+    auto restartIfIdle = [&](bool background)
+    {
+        if (replacing)
+        {
+            return true;
+        }
+        if (updatePending && !engine && !core.transferActive() && UpdateWatcher::startReplacement(background))
+        {
+            // The new instance takes this one over within seconds; if it does not, allow another try.
+            replacing = true;
+            QTimer::singleShot(15000, &app, [&replacing]
+                               { replacing = false; });
+            restartWhenIdle.stop();
+            return true;
+        }
+        return false;
+    };
+    QObject::connect(&restartWhenIdle, &QTimer::timeout, &app, [&]
+                     { restartIfIdle(true); });
+    QObject::connect(&updates, &UpdateWatcher::updateInstalled, &app, [&]
+                     {
+        updatePending = true;
+        if (!restartIfIdle(true))
+        {
+            restartWhenIdle.start();
+        } });
+
     QString startPage = parser.value(page);
     bool askIntegration = Integration::shouldAsk(parser.isSet(background));
     auto ensureWindow = [&]() -> QQuickWindow *
@@ -107,14 +141,14 @@ int main(int argc, char *argv[])
             return nullptr;
         }
         QPointer<QQuickWindow> window = qobject_cast<QQuickWindow *>(engine->rootObjects().constFirst());
-        QObject::connect(window, &QQuickWindow::visibleChanged, &app, [&engine, &app, window](bool visible)
+        QObject::connect(window, &QQuickWindow::visibleChanged, &app, [&engine, &app, &restartIfIdle, window](bool visible)
                          {
             if (visible)
             {
                 return;
             }
             // Not from inside the close handler that hid the window.
-            QTimer::singleShot(0, &app, [&engine, window]
+            QTimer::singleShot(0, &app, [&engine, &restartIfIdle, window]
                                {
                 if (window && !window->isVisible())
                 {
@@ -122,6 +156,7 @@ int main(int argc, char *argv[])
 #ifdef __GLIBC__
                     malloc_trim(0);
 #endif
+                    restartIfIdle(true);
                 } }); });
         return window;
     };
@@ -133,6 +168,15 @@ int main(int argc, char *argv[])
             window->show();
             window->raise();
             window->requestActivate();
+        }
+    };
+    // Do not open the old version over a newer installed one: the new instance opens the window and replaces this one.
+    // Only for a plain open: the page, transfer or action asked for would be lost.
+    auto openWindow = [&]
+    {
+        if (!restartIfIdle(false))
+        {
+            showWindow();
         }
     };
     auto queueFiles = [&](const QStringList &paths, const QString &workingDirectory)
@@ -178,7 +222,7 @@ int main(int argc, char *argv[])
     applyTray();
     QObject::connect(&core, &CoreBridge::trayIconChanged, &tray, applyTray);
     tray.setStandardActionsEnabled(false);
-    QObject::connect(&tray, &KStatusNotifierItem::activateRequested, &app, showWindow);
+    QObject::connect(&tray, &KStatusNotifierItem::activateRequested, &app, openWindow);
 
     QObject::connect(&transfers, &TransferWatcher::viewRequested, &app, [&](const QString &id)
                      {
@@ -201,7 +245,7 @@ int main(int argc, char *argv[])
     };
 
     auto *menu = new QMenu();
-    menu->addAction(QIcon::fromTheme(QStringLiteral("window-new")), i18n("Open KuickShare"), showWindow);
+    menu->addAction(QIcon::fromTheme(QStringLiteral("window-new")), i18n("Open KuickShare"), openWindow);
     menu->addSeparator();
     menu->addAction(QIcon::fromTheme(QStringLiteral("document-send")), i18n("Send files…"), inWindow("openFiles"));
     menu->addAction(QIcon::fromTheme(QStringLiteral("edit-paste")), i18n("Send clipboard"), inWindow("pasteClipboard"));
@@ -228,17 +272,8 @@ int main(int argc, char *argv[])
         } });
     tray.setContextMenu(menu);
 
-    // An update installed under a running instance: start the new version once idle (no transfer, window closed).
-    UpdateWatcher updates;
-    QTimer restartWhenIdle;
-    restartWhenIdle.setInterval(30000);
-    QObject::connect(&restartWhenIdle, &QTimer::timeout, &app, [&]
-                     {
-        if (!engine && !core.transferActive() && UpdateWatcher::startReplacement())
-        {
-            restartWhenIdle.stop();
-        } });
-    QObject::connect(&updates, &UpdateWatcher::updateInstalled, &restartWhenIdle, qOverload<>(&QTimer::start));
-
-    return app.exec();
+    const int code = app.exec();
+    // The window outlives the objects its handlers refer to otherwise.
+    engine.reset();
+    return code;
 }

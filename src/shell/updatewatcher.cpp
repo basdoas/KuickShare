@@ -58,7 +58,9 @@ void UpdateWatcher::onFlatpakUpdate(const QVariantMap &info)
 {
     // The portal also reports a commit only available on the remote; act once it is installed.
     const QString local = info.value(QStringLiteral("local-commit")).toString();
-    if (!local.isEmpty() && local != info.value(QStringLiteral("running-commit")).toString())
+    const QString running = info.value(QStringLiteral("running-commit")).toString();
+    qInfo() << "Flatpak update available, local commit" << local << "running commit" << running;
+    if (!local.isEmpty() && local != running)
     {
         emit updateInstalled();
     }
@@ -90,6 +92,7 @@ void UpdateWatcher::watchAppImage()
         const QString now = fileSignature(m_appImage);
         if (!now.isEmpty() && now != m_signature)
         {
+            qInfo() << "AppImage replaced on disk";
             emit updateInstalled();
         } });
     auto changed = [this]
@@ -107,9 +110,13 @@ void UpdateWatcher::watchAppImage()
     m_files.addPath(QFileInfo(m_appImage).absolutePath());
 }
 
-bool UpdateWatcher::startReplacement()
+bool UpdateWatcher::startReplacement(bool background)
 {
-    const QStringList arguments{QStringLiteral("--background"), QStringLiteral("--replace")};
+    QStringList arguments{QStringLiteral("--replace")};
+    if (background)
+    {
+        arguments.prepend(QStringLiteral("--background"));
+    }
     if (Launcher::inFlatpak())
     {
         // The portal reads argv as NUL-terminated byte strings.
@@ -126,6 +133,7 @@ bool UpdateWatcher::startReplacement()
             qWarning() << "Flatpak portal Spawn failed:" << reply.errorName() << reply.errorMessage();
             return false;
         }
+        qInfo() << "Started the installed version through the Flatpak portal";
         return true;
     }
     if (Launcher::inAppImage())

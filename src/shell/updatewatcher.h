@@ -14,8 +14,8 @@ class UpdateWatcher : public QObject
 public:
     explicit UpdateWatcher(QObject *parent = nullptr);
 
-    /// Starts a new instance of the installed version with --background --replace.
-    static bool startReplacement();
+    /// Starts a new instance of the installed version with --replace, and --background if asked.
+    static bool startReplacement(bool background);
 
     /// Identity of a file for change detection: inode and modification time.
     static QString fileSignature(const QString &path);

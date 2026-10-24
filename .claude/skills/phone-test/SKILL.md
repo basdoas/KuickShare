@@ -5,7 +5,7 @@ description: Use when the user has run (or is about to run) a hand test of Wi-Fi
 
 # Hand test with the phones
 
-The user runs `dist/test-wifi.sh` (local, untracked: `dist/` is ignored) as their normal user. It starts the daemon and the GUI from the build tree and writes everything to `dist/logs/<timestamp>/` (`latest` links to the newest). You cannot run it: it needs the phones, `sudo` for `btmon`, and a session. Build first with `build/build-env.sh cargo build` and `build/build-env.sh cmake --build dist/tmp/cmake-dev`.
+The user runs `scripts/testing/test-wifi.sh` as their normal user. It starts the daemon and the GUI from the build tree (settings and history in RAM, see `scripts/testing/sandbox.sh`) and writes everything to `dist/logs/<timestamp>/` (`latest` links to the newest). You cannot run it: it needs the phones, `sudo` for `btmon`, and a session. Logs stay in `dist/logs`. Build first with `build/build-env.sh cargo build` and `build/build-env.sh cmake --build dist/tmp/cmake-dev`.
 
 Phones: a Pixel 7 (advertises an L2CAP PSM, quick) and a Galaxy A55 with Samsung Quick Share (no PSM: GATT, and it stops advertising in bursts, which is its own behaviour). Both must show Quick Share's Receive screen, visibility Everyone, to be sent to. Other phones, chips and firewalls were never tried.
 

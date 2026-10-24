@@ -13,6 +13,7 @@ KuickShare targets KDE Plasma 6: the AppImage and the Flatpak any distribution, 
 | `tests/shell/` | Qt tests: transfer model, Dolphin menu entry, `Exec` quoting, Flatpak and AppImage launcher paths, first-launch integration |
 | `data/` | Files installed on the host: `.desktop`, metainfo, icons, notification definitions, Dolphin service menu |
 | `build/` | Build container (`build-env.sh`, `Containerfile`), all checks (`check.sh`), AppImage (`build-appimage.sh`, `appimage/`: Arch image, hook, test), tarball with its installer (`build-host-payload.sh`, `build-tarball.sh`, `appimage/install.sh`, `test-tarball.sh`) and Flatpak (`flatpak/`: manifest, build, test and repository scripts) |
+| `scripts/` | Developer tools: hand tests with a RAM sandbox (`testing/`) and documentation screenshots (`screenshots/`) |
 | `po/` | Translation catalogs |
 | `docs/` | User and design documentation |
 | `dist/` | Generated, not in git: the AppImage and its `.zsync`, the tarball, the Flatpak bundle and repository, and `tmp/` (CMake builds, staging) |
@@ -76,7 +77,16 @@ The feature needs a real adapter and phone and cannot run in CI. Build with `bui
 - The phone's side is in `adb logcat -s NearbyConnections NearbyMediums NearbySharing WifiP2pService` (USB debugging on).
 - Individual steps have `#[ignore]` tests. Run `cargo test -p rqs_lib --no-run` (inside the container; the printed path is the test binary) and execute that binary on the host with `--ignored --nocapture <name>`.
 - Quick Share must show the Receive screen on the phone. A Samsung phone may advertise only in short bursts.
-- Two local scripts, not in git: `dist/test-wifi.sh` runs the test on the desktop; `dist/test-laptop.sh` runs it on the laptop over ssh.
+- Scripts in `scripts/testing/` (settings, history and received files of the daemon and the shell stay in RAM under `/dev/shm`, deleted when the test ends; the host is not touched, but Bluetooth, Wi-Fi and NetworkManager are real):
+
+| Script | Use |
+|---|---|
+| `run.sh` | Quick run after a rebuild: daemon and shell, no sudo, no captures; starts with a synthetic transfer history (`demo-history.py`, `NO_DEMO=1` for an empty one) |
+| `test-wifi.sh` | Desktop hand test with `btmon`, journal, `adb logcat` and NAT captures in `dist/logs/<timestamp>/` |
+| `test-laptop.sh` | Same test on a laptop over ssh; copy it next to the binaries, state goes to `./state` |
+| `sandbox.sh` | The RAM home, sourced by the others |
+
+Quit any installed KuickShare first: the scripts need the session bus name.
 
 | Test | What it does |
 |---|---|
@@ -103,7 +113,7 @@ The feature needs a real adapter and phone and cannot run in CI. Build with `bui
 
 ## Screenshots
 
-The images in `docs/screenshots/` come from the real shell running against a fake core, so they show made-up devices and never the data of the machine that takes them. [`build/screenshots/`](build/screenshots/) has the scripts:
+The images in `docs/screenshots/` come from the real shell running against a fake core, so they show made-up devices and never the data of the machine that takes them. [`scripts/screenshots/`](scripts/screenshots/) has the scripts:
 
 | Script | Purpose |
 |---|---|

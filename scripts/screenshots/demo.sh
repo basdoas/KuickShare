@@ -1,7 +1,7 @@
 #!/bin/sh
 # Runs the real shell with made-up data: a fake core (fake_core.py) answers on a private D-Bus bus,
 # and settings, data and cache go to a throw-away directory. Nothing of the real session is touched.
-# Usage: build/screenshots/demo.sh [kuickshare options and files...]
+# Usage: scripts/screenshots/demo.sh [kuickshare options and files...]
 # The shell binary is dist/tmp/cmake-dev/kuickshare unless KUICKSHARE_BIN says otherwise.
 here=$(cd "$(dirname "$0")" && pwd)
 root=$(cd "$here/../.." && pwd)

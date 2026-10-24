@@ -1,7 +1,7 @@
 #!/bin/sh
 # Captures the window of the demo (see demo.sh) as <name>.png, at the size the app opens with.
 # Needs spectacle, dbus-daemon, gdbus and python3 with PyGObject on the host (not in the container).
-# Usage: build/screenshots/shoot.sh <name> [kuickshare options and files...]
+# Usage: scripts/screenshots/shoot.sh <name> [kuickshare options and files...]
 # Output goes to docs/screenshots unless OUT says otherwise.
 here=$(cd "$(dirname "$0")" && pwd)
 root=$(cd "$here/../.." && pwd)

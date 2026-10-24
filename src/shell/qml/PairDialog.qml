@@ -75,10 +75,10 @@ Kirigami.Dialog {
     ColumnLayout {
         spacing: Kirigami.Units.largeSpacing
 
-        Kirigami.InlineMessage {
+        MessageBox {
             visible: dialog.stage === "list"
             type: Kirigami.MessageType.Information
-            text: i18n("Open Preferences → Pair a device on the other computer as well, then choose it here.")
+            text: i18n("Open Preferences → Pair a device on the other computer as well, then choose it here")
             Layout.fillWidth: true
         }
         Repeater {

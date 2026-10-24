@@ -80,7 +80,6 @@ Update, uninstall and requirements are in the [usage guide](docs/usage.md).
 - [D-Bus API](docs/dbus-api.md): the interface of the background service.
 - [Contributing](CONTRIBUTING.md): build, tests, translations, releases.
 - [Security](SECURITY.md): reporting a vulnerability, known limits.
-- [Changelog](CHANGELOG.md): release notes.
 
 ## Credits
 

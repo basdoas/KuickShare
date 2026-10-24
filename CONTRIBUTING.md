@@ -145,14 +145,13 @@ The maintainer's `.claude/` setup has a `translator` agent that fills the new en
 | Agent | `translator` | Fills the pending entries of `po/*.po` |
 | Agent | `phone-log-analyzer` | Reads a hand-test session in `dist/logs` |
 | Agent | `rqs-reviewer` | Reviews changes to the Bluetooth and Wi-Fi transfer code |
-| Agent | `changelog` | Drafts the Unreleased section of `CHANGELOG.md` |
 | Skill | `check` | Runs every check of [Checks](#checks) |
 | Skill | `update-translations` | Regenerates the catalogs and runs `translator` |
 | Skill | `phone-test` | Guides and analyses a hand test with the phones |
 
 ## Releases
 
-1. Set the new version in `Cargo.toml`, `src/shell/CMakeLists.txt` and the `<releases>` block of `data/io.github.the_beper.KuickShare.metainfo.xml`, and describe it in `CHANGELOG.md`.
+1. Set the new version in `Cargo.toml`, `src/shell/CMakeLists.txt` and the `<releases>` block of `data/io.github.the_beper.KuickShare.metainfo.xml`.
 2. Tag it `vX.Y.Z`, matching the version, and push the tag.
 
 The tag triggers [`release.yml`](.github/workflows/release.yml): it builds the AppImage and the tarball, checks that their version matches the tag, tests them and publishes them with the `.zsync` file and a `SHA256SUMS` file. It then builds the Flatpak, attaches the bundle and updates the repository on GitHub Pages.

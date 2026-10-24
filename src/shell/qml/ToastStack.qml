@@ -94,7 +94,7 @@ Item {
             }
         }
 
-        delegate: Kirigami.InlineMessage {
+        delegate: MessageBox {
             id: toast
 
             required property int uid
@@ -103,7 +103,6 @@ Item {
             required property int timeout
 
             width: ListView.view.width
-            visible: true
             type: kind
             text: body
             showCloseButton: false

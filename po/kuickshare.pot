@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kuickshare 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 10:04+0000\n"
+"POT-Creation-Date: 2026-10-24 10:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -212,7 +212,7 @@ msgid ""
 "each other without asking. The port 47891 must be reachable."
 msgstr ""
 
-#: src/shell/qml/HelpPage.qml:58 src/shell/qml/SettingsPage.qml:208
+#: src/shell/qml/HelpPage.qml:58 src/shell/qml/SettingsPage.qml:206
 msgid "Trusted devices"
 msgstr ""
 
@@ -339,7 +339,7 @@ msgid "The transfer was cancelled"
 msgstr ""
 
 #: src/shell/qml/Main.qml:238 src/shell/qml/ShortcutsDialog.qml:12
-#: src/shell/qml/TransfersPage.qml:11
+#: src/shell/qml/TransfersPage.qml:14
 msgid "Transfers"
 msgstr ""
 
@@ -354,7 +354,7 @@ msgstr ""
 #: src/shell/qml/Main.qml:428
 msgid ""
 "The sharing service is not running. Nothing can be sent or received until it "
-"is started."
+"is started"
 msgstr ""
 
 #: src/shell/qml/Main.qml:431
@@ -376,7 +376,7 @@ msgstr ""
 #: src/shell/qml/PairDialog.qml:81
 msgid ""
 "Open Preferences → Pair a device on the other computer as well, then choose "
-"it here."
+"it here"
 msgstr ""
 
 #: src/shell/qml/PairDialog.qml:109
@@ -415,8 +415,8 @@ msgstr ""
 msgid "Pairing did not complete"
 msgstr ""
 
-#: src/shell/qml/SendPage.qml:136 src/shell/qml/SettingsPage.qml:182
-#: src/shell/qml/SettingsPage.qml:233
+#: src/shell/qml/SendPage.qml:136 src/shell/qml/SettingsPage.qml:181
+#: src/shell/qml/SettingsPage.qml:231
 msgid "Remove"
 msgstr ""
 
@@ -468,7 +468,7 @@ msgstr ""
 msgid "Paste from clipboard"
 msgstr ""
 
-#: src/shell/qml/SendPage.qml:284 src/shell/qml/TransfersPage.qml:265
+#: src/shell/qml/SendPage.qml:284 src/shell/qml/TransfersPage.qml:370
 #: src/shell/transferwatcher.cpp:51 src/shell/transferwatcher.cpp:140
 msgid "%1 file"
 msgid_plural "%1 files"
@@ -617,7 +617,7 @@ msgstr ""
 msgid "Be found over Bluetooth and move the transfer to a temporary Wi-Fi link"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:159
+#: src/shell/qml/SettingsPage.qml:158
 msgid ""
 "Experimental. Needs NetworkManager, its dnsmasq package and Bluetooth. While "
 "on, this computer is visible over Bluetooth to devices in range, and its Wi-"
@@ -625,175 +625,175 @@ msgid ""
 "documentation"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:165
+#: src/shell/qml/SettingsPage.qml:164
 msgid "Paired devices"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:178
+#: src/shell/qml/SettingsPage.qml:177
 msgid "Fingerprint %1"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:189
+#: src/shell/qml/SettingsPage.qml:188
 msgid "No paired computers yet"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:190
+#: src/shell/qml/SettingsPage.qml:189
 msgid "Paired computers can send to each other without asking"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:194
+#: src/shell/qml/SettingsPage.qml:193
 msgid "Pair a device…"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:202
-msgid "Pairing works only between computers on the same local network."
+#: src/shell/qml/SettingsPage.qml:200
+msgid "Pairing works only between computers on the same local network"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:214
+#: src/shell/qml/SettingsPage.qml:212
 msgid "Trust devices"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:215
+#: src/shell/qml/SettingsPage.qml:213
 msgid "Accept transfers from trusted devices without asking"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:229
+#: src/shell/qml/SettingsPage.qml:227
 msgid "MAC address %1"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:240
+#: src/shell/qml/SettingsPage.qml:238
 msgid "No devices yet"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:241
+#: src/shell/qml/SettingsPage.qml:239
 msgid "Use “Accept and trust” on an incoming transfer notification to add one"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:248
+#: src/shell/qml/SettingsPage.qml:246
 msgid ""
 "Matched by name and MAC address. Another device that copies both would be "
 "accepted too. Use only if you trust all devices in your LAN"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:254
+#: src/shell/qml/SettingsPage.qml:252
 msgid "History"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:260
+#: src/shell/qml/SettingsPage.qml:258
 msgid "Save transfer history"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:261
+#: src/shell/qml/SettingsPage.qml:259
 msgid "Keep a list of sent and received transfers"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:283
+#: src/shell/qml/SettingsPage.qml:281
 msgid "Delete entries after"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:291
+#: src/shell/qml/SettingsPage.qml:289
 msgid "Never"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:291
+#: src/shell/qml/SettingsPage.qml:289
 msgid "1 day"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:291
+#: src/shell/qml/SettingsPage.qml:289
 msgid "7 days"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:291
+#: src/shell/qml/SettingsPage.qml:289
 msgid "30 days"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:291
+#: src/shell/qml/SettingsPage.qml:289
 msgid "90 days"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:300
+#: src/shell/qml/SettingsPage.qml:298
 msgid ""
 "With the history turned off nothing is saved. Entries already saved stay "
 "until they expire or you clear them."
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:304
+#: src/shell/qml/SettingsPage.qml:302
 msgid "Startup"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:310
+#: src/shell/qml/SettingsPage.qml:308
 msgid "Start at login"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:311
+#: src/shell/qml/SettingsPage.qml:309
 msgid "Starts hidden, in the system tray if it is shown"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:317
+#: src/shell/qml/SettingsPage.qml:315
 msgid "Integration"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:323
+#: src/shell/qml/SettingsPage.qml:321
 msgid "Show tray icon"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:324
+#: src/shell/qml/SettingsPage.qml:322
 msgid "Keep KuickShare in the system tray"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:331
+#: src/shell/qml/SettingsPage.qml:329
 msgid "Dolphin context menu"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:332
+#: src/shell/qml/SettingsPage.qml:330
 msgid "Add “Send with KuickShare” to the menu of files"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:340
+#: src/shell/qml/SettingsPage.qml:338
 msgid "Application menu entry"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:341
+#: src/shell/qml/SettingsPage.qml:339
 msgid "Add KuickShare to the application menu"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:349
+#: src/shell/qml/SettingsPage.qml:347
 msgid ""
 "Without the tray icon, closing the window quits KuickShare, and nothing can "
 "be received until you open it again. At login it starts hidden: open "
-"KuickShare again to show the window."
+"KuickShare again to show the window"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:362
+#: src/shell/qml/SettingsPage.qml:360
 msgid "Turn on without a firewall?"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:363
+#: src/shell/qml/SettingsPage.qml:361
 msgid ""
 "firewalld is not running, so the firewall cannot be opened for a single "
 "port. While the hotspot is up, the phone that joins it can reach every "
 "service on this computer"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:371
+#: src/shell/qml/SettingsPage.qml:369
 msgid "Reset preferences?"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:372
+#: src/shell/qml/SettingsPage.qml:370
 msgid ""
 "Every setting goes back to its default. The history and the paired and "
 "trusted devices are kept"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:378
+#: src/shell/qml/SettingsPage.qml:376
 msgid "Reset"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:384
+#: src/shell/qml/SettingsPage.qml:382
 msgid "Reset preferences…"
 msgstr ""
 
-#: src/shell/qml/SettingsPage.qml:385
+#: src/shell/qml/SettingsPage.qml:383
 msgid "Go back to the default preferences"
 msgstr ""
 
@@ -817,167 +817,205 @@ msgstr ""
 msgid "Quit KuickShare"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:21
+#: src/shell/qml/TransfersPage.qml:38
+msgid "Search transfers"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:47 src/shell/qml/TransfersPage.qml:401
+msgid "Clear history"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:66
+msgid "All transfers"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:67 src/shell/qml/TransfersPage.qml:355
+msgid "Received"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:68 src/shell/qml/TransfersPage.qml:355
+msgid "Sent"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:90
+msgid "Any status"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:91
+msgid "In progress"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:92
+msgid "Completed"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:93
+msgid "Not completed"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:110
+msgid "Reset filters"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:126
 msgid "Clear history?"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:22
+#: src/shell/qml/TransfersPage.qml:127
+msgid ""
+"The whole history is cleared, not only the transfers shown. Files you "
+"received are not touched"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:127
 msgid "Files you received are not touched"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:79
+#: src/shell/qml/TransfersPage.qml:184
 msgid "Transfer details"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:102
+#: src/shell/qml/TransfersPage.qml:207
 msgid "Result"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:102
+#: src/shell/qml/TransfersPage.qml:207
 msgid "Size"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:128 src/shell/transferwatcher.cpp:248
+#: src/shell/qml/TransfersPage.qml:233 src/shell/transferwatcher.cpp:248
 msgid "Open link"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:135 src/shell/qml/TransfersPage.qml:613
+#: src/shell/qml/TransfersPage.qml:240 src/shell/qml/TransfersPage.qml:704
 msgid "Copy"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:140 src/shell/qml/TransfersPage.qml:617
+#: src/shell/qml/TransfersPage.qml:245 src/shell/qml/TransfersPage.qml:708
 msgid "Copied to clipboard"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:239 src/shell/transferwatcher.cpp:52
+#: src/shell/qml/TransfersPage.qml:344 src/shell/transferwatcher.cpp:52
 msgid "Looking for the device…"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:239 src/shell/qml/TransfersPage.qml:245
-#: src/shell/qml/TransfersPage.qml:259 src/shell/transferwatcher.cpp:52
+#: src/shell/qml/TransfersPage.qml:344 src/shell/qml/TransfersPage.qml:350
+#: src/shell/qml/TransfersPage.qml:364 src/shell/transferwatcher.cpp:52
 #: src/shell/transferwatcher.cpp:111
 msgid "Connecting…"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:241
+#: src/shell/qml/TransfersPage.qml:346
 msgid "Waiting for your approval"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:243
+#: src/shell/qml/TransfersPage.qml:348
 msgid "Receiving…"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:245 src/shell/transferwatcher.cpp:111
+#: src/shell/qml/TransfersPage.qml:350 src/shell/transferwatcher.cpp:111
 msgid "Waiting for the other device to accept"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:248 src/shell/transferwatcher.cpp:127
+#: src/shell/qml/TransfersPage.qml:353 src/shell/transferwatcher.cpp:127
 msgid "Switching to Wi-Fi…"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:248
+#: src/shell/qml/TransfersPage.qml:353
 msgid "Sending…"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:250
-msgid "Sent"
-msgstr ""
-
-#: src/shell/qml/TransfersPage.qml:250
-msgid "Received"
-msgstr ""
-
-#: src/shell/qml/TransfersPage.qml:252
+#: src/shell/qml/TransfersPage.qml:357
 msgid "Cancelled"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:254
+#: src/shell/qml/TransfersPage.qml:359
 msgid "Declined"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:254
+#: src/shell/qml/TransfersPage.qml:359
 msgid "You declined"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:257
+#: src/shell/qml/TransfersPage.qml:362
 msgid "Not accepted"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:257
+#: src/shell/qml/TransfersPage.qml:362
 msgid "Interrupted"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:293
-msgid "The history is large (%1) and may slow KuickShare down."
+#: src/shell/qml/TransfersPage.qml:398
+msgid "The history is large (%1) and may slow KuickShare down"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:296 src/shell/qml/TransfersPage.qml:319
-msgid "Clear history"
-msgstr ""
-
-#: src/shell/qml/TransfersPage.qml:307
+#: src/shell/qml/TransfersPage.qml:412
 msgid ""
 "History is turned off: new transfers are not saved. You can turn it on in "
-"Preferences."
+"Preferences"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:331
+#: src/shell/qml/TransfersPage.qml:422
+msgid "No matching transfers"
+msgstr ""
+
+#: src/shell/qml/TransfersPage.qml:422
 msgid "No transfers yet"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:331
+#: src/shell/qml/TransfersPage.qml:422
 msgid "Starting the sharing service…"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:332
+#: src/shell/qml/TransfersPage.qml:423
 msgid ""
 "Sent and received transfers are listed here. Make sure this computer is "
 "visible in Preferences to receive."
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:332
+#: src/shell/qml/TransfersPage.qml:423
 msgid ""
 "Transfers are only listed while the app is open, because the history is "
 "turned off."
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:490
+#: src/shell/qml/TransfersPage.qml:581
 msgid "Unknown device"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:515
+#: src/shell/qml/TransfersPage.qml:606
 msgid "Trusted"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:524
+#: src/shell/qml/TransfersPage.qml:615
 msgid "%1%"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:531
+#: src/shell/qml/TransfersPage.qml:622
 msgid "Cancel"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:538
+#: src/shell/qml/TransfersPage.qml:629
 msgid "Remove from list"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:548
+#: src/shell/qml/TransfersPage.qml:639
 msgid "Wants to share with you · PIN %1"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:557
+#: src/shell/qml/TransfersPage.qml:648
 msgid "More details"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:595 src/shell/transferwatcher.cpp:206
+#: src/shell/qml/TransfersPage.qml:686 src/shell/transferwatcher.cpp:206
 msgid "Accept"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:601 src/shell/transferwatcher.cpp:221
+#: src/shell/qml/TransfersPage.qml:692 src/shell/transferwatcher.cpp:221
 msgid "Decline"
 msgstr ""
 
-#: src/shell/qml/TransfersPage.qml:607 src/shell/transferwatcher.cpp:269
+#: src/shell/qml/TransfersPage.qml:698 src/shell/transferwatcher.cpp:269
 msgid "Open folder"
 msgstr ""
 

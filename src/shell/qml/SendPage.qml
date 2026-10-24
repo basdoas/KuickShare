@@ -505,14 +505,14 @@ Kirigami.ScrollablePage {
             }
         }
 
-        Kirigami.InlineMessage {
+        MessageBox {
             visible: page.core.transferBusy && deviceRepeater.count > 0
             type: Kirigami.MessageType.Information
             text: i18n("A transfer is in progress. You can send again when it ends")
             Layout.fillWidth: true
         }
 
-        Kirigami.InlineMessage {
+        MessageBox {
             visible: deviceRepeater.count > 0 && !page.hasContent && !page.core.transferBusy
             text: i18n("Choose or drop something to send, then pick a device")
             Layout.fillWidth: true

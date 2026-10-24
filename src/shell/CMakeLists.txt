@@ -12,7 +12,7 @@ include(KDECompilerSettings NO_POLICY_SCOPE)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 DBus Widgets Test)
+find_package(Qt6 6.9 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 DBus Widgets Test)
 find_package(KF6 REQUIRED COMPONENTS Kirigami I18n CoreAddons Crash DBusAddons StatusNotifierItem Notifications JobWidgets)
 set(QT_MAJOR_VERSION 6)
 include(ECMFindQmlModule)
@@ -22,6 +22,7 @@ qt_add_executable(kuickshare
     main.cpp
     corebridge.cpp
     transfermodel.cpp
+    transferfiltermodel.cpp
     devicemodel.cpp
     autostart.cpp
     dolphinmenu.cpp
@@ -62,6 +63,7 @@ qt_add_qml_module(kuickshare
         qml/AboutDialog.qml
         qml/ShortcutsDialog.qml
         qml/SectionTitle.qml
+        qml/MessageBox.qml
         qml/ToastStack.qml
         qml/PairDialog.qml
         qml/IntegrationDialog.qml
@@ -90,6 +92,11 @@ qt_add_executable(transfermodel_test ../../tests/shell/transfermodel_test.cpp tr
 target_include_directories(transfermodel_test PRIVATE .)
 target_link_libraries(transfermodel_test PRIVATE Qt6::Core Qt6::Test)
 add_test(NAME transfermodel COMMAND transfermodel_test)
+
+qt_add_executable(transferfiltermodel_test ../../tests/shell/transferfiltermodel_test.cpp transferfiltermodel.cpp transfermodel.cpp)
+target_include_directories(transferfiltermodel_test PRIVATE .)
+target_link_libraries(transferfiltermodel_test PRIVATE Qt6::Core Qt6::Test)
+add_test(NAME transferfiltermodel COMMAND transferfiltermodel_test)
 
 qt_add_executable(devicemodel_test ../../tests/shell/devicemodel_test.cpp devicemodel.cpp)
 target_include_directories(devicemodel_test PRIVATE .)

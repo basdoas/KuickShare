@@ -13,12 +13,15 @@
 #include <functional>
 
 #include "devicemodel.h"
+#include "transferfiltermodel.h"
 #include "transfermodel.h"
 
 class CoreBridge : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(TransferModel *transfers READ transfers CONSTANT)
+    /// `transfers` narrowed by the filters of the Transfers page.
+    Q_PROPERTY(TransferFilterModel *filteredTransfers READ filteredTransfers CONSTANT)
     Q_PROPERTY(DeviceModel *devices READ devices CONSTANT)
     Q_PROPERTY(bool connected READ connected NOTIFY connectedChanged)
     /// A transfer is live: the Send page waits for it to end before starting another.
@@ -53,6 +56,7 @@ public:
     ~CoreBridge() override;
 
     TransferModel *transfers() { return &m_transfers; }
+    TransferFilterModel *filteredTransfers() { return &m_filteredTransfers; }
     bool transferBusy() const { return m_transfers.busy(); }
     DeviceModel *devices() { return &m_devices; }
     bool connected() const { return m_connected; }
@@ -213,6 +217,7 @@ private:
     void stopDiscoveryNow();
 
     TransferModel m_transfers;
+    TransferFilterModel m_filteredTransfers{&m_transfers};
     DeviceModel m_devices;
     QProcess m_core;
     QTimer m_discoveryStopTimer;

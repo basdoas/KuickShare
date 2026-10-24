@@ -88,6 +88,7 @@ Settings that restart the engine (device name, static port, reset) are refused w
 | `corebridge.*` | `CoreBridge`: D-Bus client and the QML-facing state; `transferBusy` is true while a transfer is live and not just awaiting approval |
 | `transfermodel.*` | `TransferModel`: live and history rows; `beginPending`/`failPending` show a send before the core reports it; `busy` and `transferEnded` feed the Send page and the toasts |
 | `transferwatcher.*`, `transferjob.*` | Notifications and the Plasma progress job of each transfer |
+| `transferfiltermodel.*` | `TransferFilterModel`: `TransferModel` narrowed by direction, status group and search text for the Transfers page |
 | `devicemodel.*` | Nearby devices |
 | `dndwatcher.*` | Do Not Disturb state |
 | `autostart.*`, `integration.*`, `dolphinmenu.*`, `launcher.h`, `execquote.h` | Autostart and Dolphin entries, first-launch question, `Exec` quoting, AppImage and Flatpak path detection |
@@ -331,7 +332,7 @@ Everything below runs in CI (`.github/workflows/ci.yml`) through `build/check.sh
 | --- | --- | --- |
 | Rust unit tests | `#[cfg(test)]` in `src/core/*.rs` | Name guard, rate limiter, ARP parsing and the trusted-sender rule, settings round trip and defaults, history, stale transfer cleanup, event merging, local-address filter, final states, code format. `trust.rs` tests run two real nodes over loopback: pairing, declined pairing, strangers refused, unnamed computer, unpair, per-address and global connection limits |
 | Rust integration | `tests/core/dbus_api.rs` | Starts the real `kuickshared` binary and drives its D-Bus API as the shell does: default settings, persistence, reset, history remove, clear and expiry, legacy entries without an id, trusting an unknown transfer |
-| Qt tests | `tests/shell/`, run by `ctest` | `TransferModel` (merging, final-state handling, history rows), `DeviceModel`, Dolphin menu entry writing, Exec quoting |
+| Qt tests | `tests/shell/`, run by `ctest` | `TransferModel` (merging, final-state handling, history rows), `TransferFilterModel`, `DeviceModel`, Dolphin menu entry writing, Exec quoting |
 | `rqs_lib` | `cargo test -p rqs_lib` (not part of the root run: it is not a workspace member) | The upgrade hand-over, plain and encrypted, the Bluetooth receiver and sender and the scanner, in memory and over loopback, with a fake `WifiLink` |
 | Hardware | `#[ignore]` tests in `rqs_lib` (`hdl::ble_scan`, `hdl::ble_send::dial`) | Scan, dial and send with a real adapter and phone, run by hand outside the container; see [Wi-Fi upgrade](wifi-direct.md) |
 

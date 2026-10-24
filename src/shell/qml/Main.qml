@@ -414,7 +414,7 @@ Kirigami.ApplicationWindow {
     }
 
     // The sharing service is not running (it stopped, or never started): offer to start it.
-    Kirigami.InlineMessage {
+    MessageBox {
         parent: root.contentItem
         z: 10
         anchors {
@@ -425,7 +425,7 @@ Kirigami.ApplicationWindow {
         }
         visible: !root.core.connected && !root.core.serviceStarting
         type: Kirigami.MessageType.Error
-        text: i18n("The sharing service is not running. Nothing can be sent or received until it is started.")
+        text: i18n("The sharing service is not running. Nothing can be sent or received until it is started")
         actions: [
             Kirigami.Action {
                 text: i18n("Start service")

@@ -8,7 +8,112 @@ Kirigami.ScrollablePage {
 
     required property var core
 
+    // The transfer model narrowed by the search text and the two filters of the list header.
+    readonly property var filter: core.filteredTransfers
+
     title: i18n("Transfers")
+
+    // Search and filters, outside the list so they stay in place while it changes and scrolls. They stay visible
+    // while nothing matches, so they can be changed back.
+    header: QQC2.ToolBar {
+        visible: page.filter.sourceCount > 0
+
+        // Two columns: the search field above the two menus, and the two buttons, which are as wide
+        // as each other. Every control is as high as the search field and "Clear history".
+        contentItem: GridLayout {
+            id: bar
+
+            readonly property real controlHeight: Math.max(searchField.implicitHeight, clearHistoryButton.implicitHeight)
+            readonly property real buttonWidth: Math.max(clearHistoryButton.implicitWidth, resetButton.implicitWidth)
+
+            columns: 2
+            columnSpacing: Kirigami.Units.smallSpacing
+            rowSpacing: Kirigami.Units.smallSpacing
+
+            Kirigami.SearchField {
+                id: searchField
+
+                Layout.fillWidth: true
+                Layout.preferredHeight: bar.controlHeight
+                placeholderText: i18n("Search transfers")
+                text: page.filter.text
+                onTextChanged: page.filter.text = text
+            }
+            QQC2.Button {
+                id: clearHistoryButton
+
+                Layout.preferredWidth: bar.buttonWidth
+                Layout.preferredHeight: bar.controlHeight
+                text: i18n("Clear history")
+                icon.name: "edit-clear-history"
+                onClicked: clearDialog.open()
+            }
+
+            RowLayout {
+                spacing: Kirigami.Units.smallSpacing
+                Layout.fillWidth: true
+                Layout.preferredHeight: bar.controlHeight
+
+                QQC2.ComboBox {
+                    id: directionBox
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 1
+                    textRole: "text"
+                    valueRole: "value"
+                    model: [
+                        {text: i18n("All transfers"), value: "all"},
+                        {text: i18n("Received"), value: "inbound"},
+                        {text: i18n("Sent"), value: "outbound"}
+                    ]
+                    // The menu is as wide as the box.
+                    popup.width: directionBox.width
+                    onActivated: page.filter.direction = currentValue
+
+                    // Follows the filter, which "Reset filters" also changes.
+                    Binding {
+                        target: directionBox
+                        property: "currentIndex"
+                        value: directionBox.count > 0 ? Math.max(0, directionBox.indexOfValue(page.filter.direction)) : -1
+                    }
+                }
+                QQC2.ComboBox {
+                    id: statusBox
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.preferredWidth: 1
+                    textRole: "text"
+                    valueRole: "value"
+                    model: [
+                        {text: i18n("Any status"), value: "all"},
+                        {text: i18n("In progress"), value: "active"},
+                        {text: i18n("Completed"), value: "done"},
+                        {text: i18n("Not completed"), value: "failed"}
+                    ]
+                    popup.width: statusBox.width
+                    onActivated: page.filter.status = currentValue
+
+                    Binding {
+                        target: statusBox
+                        property: "currentIndex"
+                        value: statusBox.count > 0 ? Math.max(0, statusBox.indexOfValue(page.filter.status)) : -1
+                    }
+                }
+            }
+            QQC2.Button {
+                id: resetButton
+
+                Layout.preferredWidth: bar.buttonWidth
+                Layout.preferredHeight: bar.controlHeight
+                text: i18n("Reset filters")
+                icon.name: "edit-clear-all"
+                enabled: page.filter.filtered
+                onClicked: page.filter.clearFilters()
+            }
+        }
+    }
 
     // Same padding on every page: cards float with rounded corners instead of touching the window edges.
     topPadding: Kirigami.Units.largeSpacing
@@ -19,7 +124,7 @@ Kirigami.ScrollablePage {
     Kirigami.PromptDialog {
         id: clearDialog
         title: i18n("Clear history?")
-        subtitle: i18n("Files you received are not touched")
+        subtitle: page.filter.filtered ? i18n("The whole history is cleared, not only the transfers shown. Files you received are not touched") : i18n("Files you received are not touched")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: page.core.clearHistory()
     }
@@ -273,7 +378,7 @@ Kirigami.ScrollablePage {
 
     ListView {
         id: list
-        model: page.core.transfers
+        model: page.filter
         spacing: Kirigami.Units.largeSpacing
         bottomMargin: Kirigami.Units.largeSpacing
 
@@ -287,10 +392,10 @@ Kirigami.ScrollablePage {
             spacing: Kirigami.Units.largeSpacing
 
             // The saved history grows without limit: past this size, offer to clear it.
-            Kirigami.InlineMessage {
+            MessageBox {
                 visible: page.core.historyBytes > page.bigHistoryBytes
                 type: Kirigami.MessageType.Warning
-                text: i18n("The history is large (%1) and may slow KuickShare down.", page.core.formatSize(page.core.historyBytes))
+                text: i18n("The history is large (%1) and may slow KuickShare down", page.core.formatSize(page.core.historyBytes))
                 actions: [
                     Kirigami.Action {
                         text: i18n("Clear history")
@@ -301,25 +406,11 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
             }
 
-            Kirigami.InlineMessage {
+            MessageBox {
                 visible: !page.core.historyEnabled
                 type: Kirigami.MessageType.Information
-                text: i18n("History is turned off: new transfers are not saved. You can turn it on in Preferences.")
+                text: i18n("History is turned off: new transfers are not saved. You can turn it on in Preferences")
                 Layout.fillWidth: true
-            }
-
-            RowLayout {
-                visible: list.count > 0
-                Layout.fillWidth: true
-
-                Item {
-                    Layout.fillWidth: true
-                }
-                QQC2.ToolButton {
-                    text: i18n("Clear history")
-                    icon.name: "edit-clear-history"
-                    onClicked: clearDialog.open()
-                }
             }
         }
 
@@ -327,9 +418,9 @@ Kirigami.ScrollablePage {
             anchors.centerIn: parent
             width: parent.width - Kirigami.Units.gridUnit * 4
             visible: list.count === 0
-            icon.name: page.core.connected ? "folder-sync" : "dialog-warning"
-            text: page.core.connected ? i18n("No transfers yet") : i18n("Starting the sharing service…")
-            explanation: !page.core.connected ? "" : page.core.historyEnabled ? i18n("Sent and received transfers are listed here. Make sure this computer is visible in Preferences to receive.") : i18n("Transfers are only listed while the app is open, because the history is turned off.")
+            icon.name: page.filter.sourceCount > 0 ? "edit-find" : page.core.connected ? "folder-sync" : "dialog-warning"
+            text: page.filter.sourceCount > 0 ? i18n("No matching transfers") : page.core.connected ? i18n("No transfers yet") : i18n("Starting the sharing service…")
+            explanation: page.filter.sourceCount > 0 || !page.core.connected ? "" : page.core.historyEnabled ? i18n("Sent and received transfers are listed here. Make sure this computer is visible in Preferences to receive.") : i18n("Transfers are only listed while the app is open, because the history is turned off.")
         }
 
         delegate: Item {

@@ -13,7 +13,7 @@ KuickShare has two programs. `kuickshare` is the window, tray icon and notificat
 
 ## Requirements
 
-- KDE Plasma 6. The AppImage and the Flatpak bring their own libraries (the Flatpak needs Flatpak and [Flathub](https://flathub.org/setup)). The tarball uses the system's Qt 6 and KDE Frameworks 6: on Fedora, `kf6-kirigami`, `kf6-kirigami-addons` and `qt6-qtdeclarative`. The installer checks for them and prints the `dnf install` (or `pacman`) line if one is missing.
+- KDE Plasma 6. The AppImage and the Flatpak bring their own libraries (the Flatpak needs Flatpak and [Flathub](https://flathub.org/setup)). The tarball uses the system's Qt 6 (6.9 or newer) and KDE Frameworks 6: on Fedora, `kf6-kirigami`, `kf6-kirigami-addons` and `qt6-qtdeclarative`. The installer checks for them and prints the `dnf install` (or `pacman`) line if one is missing.
 - The computer and the phone on the same Wi-Fi network. Bluetooth is used to find devices, never to move data. Without a shared network, see the experimental [Wi-Fi upgrade](wifi-direct.md).
 - A Google account is not needed and cannot be used.
 
@@ -249,6 +249,8 @@ The Transfers page lists transfers newest first, running ones included. A card s
 | More details | Always on finished entries: result, size, file names or text |
 | Remove from list | Finished entries |
 
+At the top, a search field and two menus narrow the list: the search matches the device name, received text and file names; the menus pick the direction (all, received, sent) and the status (any, in progress, completed, not completed, which covers cancelled, declined and interrupted transfers). The filters are not saved and do not change the history. With no match the page says so; **Reset filters**, next to the menus, brings the whole list back (it is greyed out while no filter is set).
+
 When a transfer ends, a message slides up from the bottom edge of the window, on any page, and stacks above older ones (at most four):
 
 | Message | Colour | Stays |
@@ -259,7 +261,7 @@ When a transfer ends, a message slides up from the bottom edge of the window, on
 
 Errors the service reports, and "Copied to clipboard" (green, 1.5 s), use the same messages. A message that stays more than 3 s has a close button.
 
-Entries keep at most 200 file names and 10000 characters of text. Wi-Fi credentials received from a phone are stored without the password. **Clear history** deletes the list and does not touch received files. A banner suggests clearing when the history file gets large.
+Entries keep at most 200 file names and 10000 characters of text. Wi-Fi credentials received from a phone are stored without the password. **Clear history** deletes the whole list, not only the transfers the filters show, and does not touch received files. A banner suggests clearing when the history file gets large.
 
 The history is saved in a file on disk, 500 entries at most (the oldest go first). It is controlled in Preferences: it can be turned off, and entries can expire after 1, 7, 30 or 90 days. With the history off, the page only lists transfers made while the app is open.
 

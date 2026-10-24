@@ -153,8 +153,7 @@ FormCard.FormCardPage {
         }
     }
     // Experimental and with side effects, so a warning box like the one under Trusted devices.
-    Kirigami.InlineMessage {
-        visible: true // hidden by default
+    MessageBox {
         type: Kirigami.MessageType.Warning
         text: i18n("Experimental. Needs NetworkManager, its dnsmasq package and Bluetooth. While on, this computer is visible over Bluetooth to devices in range, and its Wi-Fi connection may drop while the temporary Wi-Fi link is active. See the documentation")
         Layout.fillWidth: true
@@ -196,10 +195,9 @@ FormCard.FormCardPage {
             onClicked: pairDialog.open()
         }
     }
-    Kirigami.InlineMessage {
-        visible: true // hidden by default
+    MessageBox {
         type: Kirigami.MessageType.Information
-        text: i18n("Pairing works only between computers on the same local network.")
+        text: i18n("Pairing works only between computers on the same local network")
         Layout.fillWidth: true
         Layout.topMargin: Kirigami.Units.largeSpacing
     }
@@ -242,7 +240,7 @@ FormCard.FormCardPage {
         }
     }
     // A warning, not a hint, and only while trusting is on.
-    Kirigami.InlineMessage {
+    MessageBox {
         visible: page.core.trustedDevicesEnabled
         type: Kirigami.MessageType.Warning
         text: i18n("Matched by name and MAC address. Another device that copies both would be accepted too. Use only if you trust all devices in your LAN")
@@ -343,10 +341,10 @@ FormCard.FormCardPage {
             onToggled: page.core.menuEntry = checked
         }
     }
-    Kirigami.InlineMessage {
+    MessageBox {
         visible: page.core.connected && !page.core.trayIcon
         type: Kirigami.MessageType.Information
-        text: i18n("Without the tray icon, closing the window quits KuickShare, and nothing can be received until you open it again. At login it starts hidden: open KuickShare again to show the window.")
+        text: i18n("Without the tray icon, closing the window quits KuickShare, and nothing can be received until you open it again. At login it starts hidden: open KuickShare again to show the window")
         Layout.fillWidth: true
         Layout.topMargin: Kirigami.Units.largeSpacing
     }

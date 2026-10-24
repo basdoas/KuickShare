@@ -26,6 +26,8 @@ QVariant DeviceModel::data(const QModelIndex &index, int role) const
         return entry.trust;
     case MediumRole:
         return entry.medium;
+    case PairingRole:
+        return entry.pairing;
     }
     return {};
 }
@@ -39,6 +41,7 @@ QHash<int, QByteArray> DeviceModel::roleNames() const
         {AddressRole, "address"},
         {TrustRole, "trust"},
         {MediumRole, "medium"},
+        {PairingRole, "pairing"},
     };
 }
 
@@ -84,9 +87,9 @@ void DeviceModel::promoteHidden(const QString &name)
     }
 }
 
-void DeviceModel::upsert(const QString &id, const QString &name, const QString &type, const QString &address, const QString &trust, const QString &medium)
+void DeviceModel::upsert(const QString &id, const QString &name, const QString &type, const QString &address, const QString &trust, const QString &medium, bool pairing)
 {
-    const Entry entry{id, name, type, address, trust, medium};
+    const Entry entry{id, name, type, address, trust, medium, pairing};
     const bool ble = medium == QLatin1String("ble");
     // A device seen again under a new name or medium: forget the old entries of this id first.
     for (int i = 0; i < m_hidden.size(); ++i)

@@ -17,6 +17,7 @@ public:
         AddressRole,
         TrustRole,
         MediumRole,
+        PairingRole,
     };
 
     using QAbstractListModel::QAbstractListModel;
@@ -28,8 +29,8 @@ public:
     /// `medium` is "lan" or "ble"; `address` is empty for "ble". A phone seen both on the LAN and over
     /// Bluetooth (same name) is listed once, on the LAN: the Bluetooth entry is kept out of the list
     /// while the LAN one exists.
-    /// `trust` is "", "kuickshare" (runs KuickShare) or "trusted" (paired).
-    void upsert(const QString &id, const QString &name, const QString &type, const QString &address, const QString &trust, const QString &medium);
+    /// `trust` is "", "kuickshare" (runs KuickShare) or "trusted" (paired); `pairing` is whether that computer has its pairing window open.
+    void upsert(const QString &id, const QString &name, const QString &type, const QString &address, const QString &trust, const QString &medium, bool pairing = false);
     void remove(const QString &id);
     /// The name of a known device, or an empty string.
     QString nameOf(const QString &id) const;
@@ -44,6 +45,7 @@ private:
         QString address;
         QString trust;
         QString medium;
+        bool pairing = false;
     };
     int indexOf(const QString &id) const;
     bool lanEntryNamed(const QString &name) const;

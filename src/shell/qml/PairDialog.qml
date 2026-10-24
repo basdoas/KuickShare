@@ -90,9 +90,10 @@ Kirigami.Dialog {
                 required property string name
                 required property string trust
                 required property string address
+                required property bool pairing
 
                 visible: dialog.stage === "list" && trust.length > 0
-                enabled: trust !== "trusted"
+                enabled: trust !== "trusted" && pairing
                 icon.name: trust === "trusted" ? "security-high" : "computer-symbolic"
                 text: name.length > 0 ? name : address
                 // The delegate must keep its size when hidden stages show other items.
@@ -104,8 +105,8 @@ Kirigami.Dialog {
                 }
 
                 QQC2.Label {
-                    visible: candidate.trust === "trusted"
-                    text: i18n("Already paired")
+                    visible: candidate.trust === "trusted" || !candidate.pairing
+                    text: candidate.trust === "trusted" ? i18n("Already paired") : i18n("Waiting for the other computer")
                     opacity: 0.7
                     anchors.right: parent.right
                     anchors.rightMargin: Kirigami.Units.largeSpacing

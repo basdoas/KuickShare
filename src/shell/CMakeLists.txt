@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(kuickshare VERSION 1.2.1 LANGUAGES CXX)
+project(kuickshare VERSION 1.2.2 LANGUAGES CXX)
 add_compile_definitions(KUICKSHARE_VERSION="${PROJECT_VERSION}")
 
 find_package(ECM REQUIRED NO_MODULE)
@@ -29,6 +29,8 @@ qt_add_executable(kuickshare
     transferjob.cpp
     transferwatcher.cpp
     dndwatcher.cpp
+    instance.cpp
+    updatewatcher.cpp
 )
 
 # The Dolphin entry the installer also uses, so the app can add it back when asked.
@@ -125,3 +127,8 @@ qt_add_resources(integration_test integration
 target_include_directories(integration_test PRIVATE .)
 target_link_libraries(integration_test PRIVATE Qt6::Core Qt6::Test)
 add_test(NAME integration COMMAND integration_test)
+
+qt_add_executable(instance_test ../../tests/shell/instance_test.cpp instance.cpp updatewatcher.cpp)
+target_include_directories(instance_test PRIVATE .)
+target_link_libraries(instance_test PRIVATE Qt6::Core Qt6::DBus Qt6::Test)
+add_test(NAME instance COMMAND instance_test)

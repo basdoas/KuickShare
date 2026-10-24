@@ -801,8 +801,13 @@ impl Presence {
     }
 }
 
-/// `trust` is "", "kuickshare" (runs KuickShare) or "trusted" (paired with this computer).
-fn device_info(endpoint: &EndpointInfo, trust: &str) -> HashMap<&'static str, Variant<'static>> {
+/// `trust` is "", "kuickshare" (runs KuickShare) or "trusted" (paired with this computer); `pairing` is
+/// whether that computer has its pairing window open.
+fn device_info(
+    endpoint: &EndpointInfo,
+    trust: &str,
+    pairing: bool,
+) -> HashMap<&'static str, Variant<'static>> {
     let device_type = endpoint
         .rtype
         .as_ref()
@@ -820,6 +825,7 @@ fn device_info(endpoint: &EndpointInfo, trust: &str) -> HashMap<&'static str, Va
         ),
         ("device_type", Variant::from(device_type)),
         ("trust", Variant::from(trust.to_owned())),
+        ("pairing", Variant::from(pairing)),
         (
             "medium",
             Variant::from(endpoint.ble.map_or("lan", |_| "ble")),
@@ -837,11 +843,40 @@ async fn forward_devices(
 ) {
     let presence = Arc::new(StdMutex::new(Presence::default()));
     let mut probed: HashMap<String, Instant> = HashMap::new();
+    let cache = ProbeCache::default();
+    let mut reprobe = tokio::time::interval(PAIRING_REPROBE);
     loop {
-        let endpoint = match events.recv().await {
-            Ok(endpoint) => endpoint,
-            Err(broadcast::error::RecvError::Lagged(_)) => continue,
-            Err(broadcast::error::RecvError::Closed) => return,
+        let endpoint = tokio::select! {
+            received = events.recv() => match received {
+                Ok(endpoint) => endpoint,
+                Err(broadcast::error::RecvError::Lagged(_)) => continue,
+                Err(broadcast::error::RecvError::Closed) => return,
+            },
+            // The other computer's window can open or close at any time and mDNS says nothing about it.
+            _ = reprobe.tick() => {
+                if trust.pairing_open() {
+                    let known: Vec<EndpointInfo> = {
+                        let cache = cache.lock().unwrap();
+                        let endpoints = endpoints.lock().unwrap();
+                        endpoints
+                            .values()
+                            .filter(|e| e.ip.as_ref().is_some_and(|ip| cache.contains_key(ip)))
+                            .cloned()
+                            .collect()
+                    };
+                    for endpoint in known {
+                        tokio::spawn(probe_device(
+                            connection.clone(),
+                            endpoint,
+                            trust.clone(),
+                            trusted_ips.clone(),
+                            endpoints.clone(),
+                            cache.clone(),
+                        ));
+                    }
+                }
+                continue;
+            }
         };
 
         // A vanished device is an endpoint with only its id set (mDNS) or `present` false (Bluetooth).
@@ -856,16 +891,21 @@ async fn forward_devices(
                 endpoints.insert(endpoint.id.clone(), endpoint.clone());
                 replaced
             };
-            let known_trust = match &endpoint.ip {
-                Some(ip) if trusted_ips.lock().unwrap().contains(ip) => "trusted",
-                _ => "",
+            let (known_trust, known_pairing) = match endpoint
+                .ip
+                .as_ref()
+                .and_then(|ip| cache.lock().unwrap().get(ip).copied())
+            {
+                Some((true, _)) => ("trusted", false),
+                Some((false, pairing)) => ("kuickshare", pairing),
+                None => ("", false),
             };
             let emitted = async {
                 let iface = interface_ref(&connection).await?;
                 Service::device_found(
                     iface.signal_emitter(),
                     &endpoint.id,
-                    device_info(&endpoint, known_trust),
+                    device_info(&endpoint, known_trust, known_pairing),
                 )
                 .await
             };
@@ -911,6 +951,7 @@ async fn forward_devices(
                     trust.clone(),
                     trusted_ips.clone(),
                     endpoints.clone(),
+                    cache.clone(),
                 ));
             }
         } else {
@@ -926,6 +967,12 @@ async fn forward_devices(
     }
 }
 
+/// The last probe answer per address: re-announcing a device (mDNS adverts) must not reset its card.
+type ProbeCache = Arc<StdMutex<HashMap<String, (bool, bool)>>>;
+
+/// How often the computers already seen as running KuickShare are asked again while the pairing window is open.
+const PAIRING_REPROBE: Duration = Duration::from_secs(4);
+
 /// Checks whether the device runs KuickShare and updates the card with the answer.
 async fn probe_device(
     connection: Connection,
@@ -933,6 +980,7 @@ async fn probe_device(
     trust: Arc<Trust>,
     trusted_ips: TrustedIps,
     endpoints: Endpoints,
+    cache: ProbeCache,
 ) {
     let Some(ip) = endpoint.ip.clone() else {
         return;
@@ -944,10 +992,29 @@ async fn probe_device(
         .probe(SocketAddr::new(ip_addr, trust::DEFAULT_PORT))
         .await
     else {
-        // Not a KuickShare computer (or it is not reachable): nothing to add.
+        // Not a KuickShare computer (or it is not reachable any more): drop what was known about it.
         trusted_ips.lock().unwrap().remove(&ip);
+        let was_known = cache.lock().unwrap().remove(&ip).is_some();
+        if was_known && endpoints.lock().unwrap().contains_key(&endpoint.id) {
+            let emitted = async {
+                let iface = interface_ref(&connection).await?;
+                Service::device_found(
+                    iface.signal_emitter(),
+                    &endpoint.id,
+                    device_info(&endpoint, "", false),
+                )
+                .await
+            };
+            if let Err(e) = emitted.await {
+                tracing::warn!("failed to emit DeviceFound: {e}");
+            }
+        }
         return;
     };
+    cache
+        .lock()
+        .unwrap()
+        .insert(ip.clone(), (result.trusted, result.pairing));
     if result.trusted {
         trusted_ips.lock().unwrap().insert(ip);
     } else {
@@ -966,7 +1033,7 @@ async fn probe_device(
         Service::device_found(
             iface.signal_emitter(),
             &endpoint.id,
-            device_info(&endpoint, label),
+            device_info(&endpoint, label, result.pairing),
         )
         .await
     };
@@ -1104,7 +1171,7 @@ mod tests {
 
     #[test]
     fn ble_device_has_the_ble_medium_and_no_address() {
-        let info = device_info(&ble_endpoint(true), "");
+        let info = device_info(&ble_endpoint(true), "", false);
         assert_eq!(text(&info, "medium"), "ble");
         assert_eq!(text(&info, "name"), "Pixel");
         assert_eq!(
@@ -1122,8 +1189,9 @@ mod tests {
             present: Some(true),
             ..EndpointInfo::default()
         };
-        let info = device_info(&lan, "kuickshare");
+        let info = device_info(&lan, "kuickshare", true);
         assert_eq!(text(&info, "medium"), "lan");
+        assert_eq!(info["pairing"], Variant::from(true));
         assert_eq!(text(&info, "ip"), "10.0.0.2");
     }
 

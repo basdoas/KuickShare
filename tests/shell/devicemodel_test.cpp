@@ -18,6 +18,16 @@ private Q_SLOTS:
         QCOMPARE(model.data(model.index(1), DeviceModel::MediumRole).toString(), QStringLiteral("lan"));
     }
 
+    void pairingFlagFollowsTheLatestUpsert()
+    {
+        DeviceModel model;
+        const QString id = QStringLiteral("10.0.0.2:4000");
+        model.upsert(id, QStringLiteral("Desk"), QString(), id, QStringLiteral("kuickshare"), QStringLiteral("lan"), true);
+        QVERIFY(model.data(model.index(0), DeviceModel::PairingRole).toBool());
+        model.upsert(id, QStringLiteral("Desk"), QString(), id, QStringLiteral("kuickshare"), QStringLiteral("lan"));
+        QVERIFY(!model.data(model.index(0), DeviceModel::PairingRole).toBool());
+    }
+
     void upsertReplacesAndRemoveDrops()
     {
         DeviceModel model;

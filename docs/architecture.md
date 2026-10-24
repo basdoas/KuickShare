@@ -54,7 +54,9 @@ flowchart LR
 ### Who starts whom
 
 - The shell starts the core. At startup `CoreBridge` checks whether the bus name is owned. If it is, the shell attaches to that core. If not, it runs `kuickshared` from its own directory with `QProcess`.
-- The shell is single-instance (`KDBusService::Unique`). A second launch, for example from Dolphin, only queues its files in the running window.
+- The shell is single-instance (`KDBusService::Unique`). A second launch of the same version, for example from Dolphin, only queues its files in the running window.
+- A launch of a different version, or with `--replace`, first asks the running shell to `quit()` over D-Bus (`src/shell/instance.cpp`), waits up to 8 s for it and 3 s for its core to leave the bus, then starts normally. An update therefore takes over a shell left in the tray. A transfer running in the old shell is lost.
+- `UpdateWatcher` (`src/shell/updatewatcher.cpp`) notices an update installed under a running Flatpak (portal update monitor) or AppImage (the `$APPIMAGE` file replaced, after 5 s without changes). Once no transfer is active and the window is closed, `main.cpp` starts `kuickshare --background --replace` (Flatpak: portal `Spawn` with the latest version; AppImage: the file). The tarball installer restarts the app itself. Both watchers are unverified on a real desktop *(inferred from the portal specification)*.
 - On exit the shell sends SIGTERM to a core it started and waits up to 3 s. A core it only attached to is left running. The core stops its engine on SIGTERM or Ctrl+C.
 - Autostart is a `.desktop` file in `~/.config/autostart` that runs `kuickshare --background`.
 
@@ -216,7 +218,7 @@ The trust channel is a Noise XX handshake (`Noise_XX_25519_ChaChaPoly_BLAKE2s`, 
 
 | Request | Effect |
 | --- | --- |
-| Probe | Answered for anyone. Says whether the caller's key is paired. Used during discovery to label cards "KuickShare" or "trusted" |
+| Probe | Answered for anyone. Says whether the caller's key is paired and whether the pairing window is open. Used during discovery to label cards "KuickShare" or "trusted" and to enable the card in the pairing dialog. That the window is open is therefore visible to anyone on the LAN, who could see it by trying to pair anyway |
 | Intent | Accepted only from a paired key. Stores the peer's name for its IP for 60 s, once |
 | Pair | Accepted only while the user has opened the pairing window (5 min) and the peer sent a non-empty name |
 

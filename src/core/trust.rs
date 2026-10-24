@@ -73,6 +73,8 @@ pub enum TrustEvent {
 pub struct ProbeResult {
     pub name: String,
     pub trusted: bool,
+    /// The other computer has its pairing window open (or is too old to say).
+    pub pairing: bool,
 }
 
 pub struct Trust {
@@ -318,7 +320,7 @@ impl Trust {
         *self.pairing_until.lock().unwrap() = open.then(|| Instant::now() + PAIRING_WINDOW);
     }
 
-    fn pairing_open(&self) -> bool {
+    pub fn pairing_open(&self) -> bool {
         self.pairing_until
             .lock()
             .unwrap()
@@ -422,7 +424,11 @@ impl Trust {
         let hello = session.recv_within(IO_TIMEOUT).await?;
         let known = self.peer_with_key(&session.remote_key);
         match hello.first().copied() {
-            Some(HELLO_PROBE) => session.send(&[1, u8::from(known.is_some())]).await,
+            Some(HELLO_PROBE) => {
+                session
+                    .send(&[1, u8::from(known.is_some()), u8::from(self.pairing_open())])
+                    .await
+            }
             Some(HELLO_INTENT) => match known {
                 Some(peer) => {
                     self.intents
@@ -455,10 +461,13 @@ impl Trust {
         session.send(&[HELLO_PROBE]).await?;
         let reply = session.recv_within(IO_TIMEOUT).await?;
         let they_trust = reply.get(1) == Some(&1);
+        // Computers from before the flag existed send two bytes: assume the window is open and let pairing say.
+        let pairing = reply.get(2) != Some(&0);
         let we_trust = self.peer_with_key(&session.remote_key).is_some();
         Ok(ProbeResult {
             name: session.remote_name,
             trusted: they_trust && we_trust,
+            pairing,
         })
     }
 
@@ -601,7 +610,8 @@ mod tests {
             probe,
             ProbeResult {
                 name: "bob".into(),
-                trusted: true
+                trusted: true,
+                pairing: true
             }
         );
         a.trust.announce(b.addr).await.unwrap();
@@ -628,6 +638,7 @@ mod tests {
         assert_eq!(b.trust.take_intent("127.0.0.1"), None);
         let probe = a.trust.probe(b.addr).await.unwrap();
         assert!(!probe.trusted);
+        assert!(!probe.pairing);
         // Pairing window closed.
         assert!(a.trust.pair(b.addr).await.is_err());
     }

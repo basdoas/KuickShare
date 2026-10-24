@@ -196,9 +196,12 @@ FormCard.FormCardPage {
             onClicked: pairDialog.open()
         }
     }
-    FormCard.FormSectionText {
-        Layout.bottomMargin: 0
-        text: i18n("A paired computer can send you files without asking.")
+    Kirigami.InlineMessage {
+        visible: true // hidden by default
+        type: Kirigami.MessageType.Information
+        text: i18n("Pairing works only between computers on the same local network.")
+        Layout.fillWidth: true
+        Layout.topMargin: Kirigami.Units.largeSpacing
     }
 
     SectionTitle {

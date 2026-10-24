@@ -24,9 +24,11 @@
 #include <KStatusNotifierItem>
 
 #include "corebridge.h"
+#include "instance.h"
 #include "integration.h"
 #include "dndwatcher.h"
 #include "transferwatcher.h"
+#include "updatewatcher.h"
 
 int main(int argc, char *argv[])
 {
@@ -42,7 +44,7 @@ int main(int argc, char *argv[])
     KAboutData about(QStringLiteral("kuickshare"),
                      QStringLiteral("KuickShare"),
                      QStringLiteral(KUICKSHARE_VERSION),
-                     i18n("Quick Share client for KDE"),
+                     i18n("Quick Share client for KDE Plasma"),
                      KAboutLicense::GPL_V3);
     about.setDesktopFileName(QStringLiteral("io.github.the_beper.KuickShare"));
     KAboutData::setApplicationData(about);
@@ -53,10 +55,12 @@ int main(int argc, char *argv[])
 
     const QCommandLineOption background(QStringLiteral("background"), i18n("Start hidden in the system tray"));
     const QCommandLineOption page(QStringList{QStringLiteral("page")}, i18n("Open the given page: send, transfers, settings or help"), QStringLiteral("page"));
+    const QCommandLineOption replace(QStringLiteral("replace"), i18n("Quit a running instance and take its place"));
     auto setupParser = [&](QCommandLineParser &p)
     {
         about.setupCommandLine(&p);
         p.addOption(background);
+        p.addOption(replace);
         p.addOption(page);
         p.addPositionalArgument(QStringLiteral("files"), i18n("Files to send"), QStringLiteral("[files...]"));
     };
@@ -69,6 +73,8 @@ int main(int argc, char *argv[])
     KSignalHandler::self()->watchSignal(SIGINT);
     QObject::connect(KSignalHandler::self(), &KSignalHandler::signalReceived, &app, &QApplication::quit);
 
+    // A newer or older version left running by an update must not answer in place of this one.
+    Instance::replaceRunning(parser.isSet(replace));
     KDBusService service(KDBusService::Unique);
 
     CoreBridge core;
@@ -221,6 +227,18 @@ int main(int argc, char *argv[])
             app.quit();
         } });
     tray.setContextMenu(menu);
+
+    // An update installed under a running instance: start the new version once idle (no transfer, window closed).
+    UpdateWatcher updates;
+    QTimer restartWhenIdle;
+    restartWhenIdle.setInterval(30000);
+    QObject::connect(&restartWhenIdle, &QTimer::timeout, &app, [&]
+                     {
+        if (!engine && !core.transferActive() && UpdateWatcher::startReplacement())
+        {
+            restartWhenIdle.stop();
+        } });
+    QObject::connect(&updates, &UpdateWatcher::updateInstalled, &restartWhenIdle, qOverload<>(&QTimer::start));
 
     return app.exec();
 }

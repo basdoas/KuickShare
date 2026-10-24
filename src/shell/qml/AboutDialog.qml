@@ -154,7 +154,7 @@ Kirigami.Dialog {
                         text: i18n("KuickShare %1", dialog.core.version)
                     }
                     QQC2.Label {
-                        text: i18n("Quick Share client for KDE")
+                        text: i18n("Quick Share client for KDE Plasma")
                         opacity: 0.7
                         wrapMode: Text.Wrap
                         Layout.fillWidth: true

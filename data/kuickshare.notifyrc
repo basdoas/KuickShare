@@ -1,7 +1,7 @@
 [Global]
 IconName=io.github.the_beper.KuickShare
 Name=KuickShare
-Comment=Quick Share client for KDE
+Comment=Quick Share client for KDE Plasma
 DesktopEntry=io.github.the_beper.KuickShare
 
 [Event/incomingTransfer]

@@ -43,7 +43,7 @@ bool Autostart::setEnabled(bool enabled)
                                 "[Desktop Entry]\n"
                                 "Type=Application\n"
                                 "Name=KuickShare\n"
-                                "Comment=Quick Share client for KDE\n"
+                                "Comment=Quick Share client for KDE Plasma\n"
                                 "Exec=%1\n"
                                 "Icon=io.github.the_beper.KuickShare\n"
                                 "Terminal=false\n"

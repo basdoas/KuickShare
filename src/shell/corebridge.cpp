@@ -853,7 +853,8 @@ void CoreBridge::onDeviceFound(const QString &id, const QVariantMap &info)
                      info.value(QStringLiteral("device_type")).toString(),
                      address,
                      info.value(QStringLiteral("trust")).toString(),
-                     medium);
+                     medium,
+                     info.value(QStringLiteral("pairing")).toBool());
 }
 
 void CoreBridge::onDeviceLost(const QString &id)

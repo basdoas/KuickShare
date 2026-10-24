@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.2
+
+- **An update no longer leaves the old version running in the tray.** Starting KuickShare when another version is running, or with the new `--replace` option, quits the old one first. A Flatpak or AppImage that finds itself updated under it starts the new version by itself once no transfer is running and the window is closed. The tarball installer already did this. Both detections are untested on a real desktop.
+- The pairing dialog enables a computer only while it has its own pairing window open, and says "Waiting for the other computer" otherwise, instead of failing when you pick it. The list is refreshed every 4 s while your window is open. Older versions do not report the window and stay selectable.
+- Preferences: the note under Paired devices is now a box saying that pairing works only on the same local network.
+- Received-transfer notifications, the details dialog and the toasts were reworked. The pages of the main window fade in with the same easing as the toasts, without the slide that clashed with the fade.
+- Release assets are named `KuickShare-x86_64.<ext>`.
+
 ## 1.2.1
 
 - The Send list no longer keeps stale entries of a computer whose KuickShare was restarted: a new announcement with the same address, name and type replaces the old one.

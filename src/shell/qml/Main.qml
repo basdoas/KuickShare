@@ -70,13 +70,14 @@ Kirigami.ApplicationWindow {
         }
     }
 
-    // The new page fades in, on top of the stack's own slide.
+    // The new page fades in with the easing the rest of the app uses; the stack's own slide is off, as it fought the fade.
     NumberAnimation {
         id: pageFade
         property: "opacity"
         from: 0
         to: 1
         duration: Kirigami.Units.longDuration
+        easing.type: Easing.OutCubic
     }
 
     function openFiles() {
@@ -172,6 +173,7 @@ Kirigami.ApplicationWindow {
     }
 
     pageStack.globalToolBar.style: Kirigami.ApplicationHeaderStyle.None
+    pageStack.columnView.scrollDuration: 0
 
     header: Item {
         implicitHeight: tabs.implicitHeight

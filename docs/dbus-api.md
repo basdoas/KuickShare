@@ -155,7 +155,8 @@ A restart of sharing (name, port, reset) forgets the discovered devices without 
 | `port` | Quick Share port; empty for Bluetooth |
 | `device_type` | `Unknown`, `Phone`, `Tablet` or `Laptop`; empty if not announced |
 | `medium` | `lan` (mDNS) or `ble` (Bluetooth LE) |
-| `trust` | `""` other device, `kuickshare` runs KuickShare, `trusted` paired with this computer (both sides). Only addresses on the local network (private, link-local, loopback, IPv6 ULA) are checked, each at most once every 20 seconds |
+| `trust` | `""` other device, `kuickshare` runs KuickShare, `trusted` paired with this computer (both sides). Only addresses on the local network (private, link-local, loopback, IPv6 ULA) are checked, each at most once every 20 seconds (the computers already known as KuickShare every 4 seconds while this computer's pairing window is open) |
+| `pairing` | Boolean: the other computer runs KuickShare and has its pairing window open. `false` for other devices and until the first check; `true` for a KuickShare computer whose version does not report it (the pairing attempt then says whether it was refused) |
 
 ## Transfer states
 

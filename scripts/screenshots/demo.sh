@@ -11,8 +11,14 @@ bin=${KUICKSHARE_BIN:-$root/dist/tmp/cmake-dev/kuickshare}
 mkdir -p "$root/dist/tmp"
 tmp=$(mktemp -d "$root/dist/tmp/demo.XXXXXX")
 mkdir -p "$tmp/config" "$tmp/data/icons" "$tmp/cache" "$tmp/files"
-# Same look as the desktop (colours, icon theme) and the project's own icons.
-cp "${XDG_CONFIG_HOME:-$HOME/.config}/kdeglobals" "$tmp/config/" 2>/dev/null
+# The light Breeze look the documentation images have, whatever the desktop uses; without that colour scheme
+# file, the desktop's own colours and icon theme. The project's own icons are added either way.
+light=/usr/share/color-schemes/BreezeLight.colors
+if [ -r "$light" ]; then
+    { cat "$light"; printf '\n[Icons]\nTheme=breeze\n'; } > "$tmp/config/kdeglobals"
+else
+    cp "${XDG_CONFIG_HOME:-$HOME/.config}/kdeglobals" "$tmp/config/" 2>/dev/null
+fi
 cp -r "$root/data/icons/hicolor" "$tmp/data/icons/"
 for f in photo-1.jpg:2400000 photo-2.jpg:3100000 notes.pdf:850000; do
     truncate -s "${f#*:}" "$tmp/files/${f%:*}"

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kuickshare 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 10:11+0000\n"
+"POT-Creation-Date: 2026-10-24 17:15+0000\n"
 "PO-Revision-Date: 2026-10-20 00:00+0000\n"
 "Last-Translator: dosulu <eray.ulu@tutamail.com>\n"
 "Language-Team: Turkish\n"
@@ -81,7 +81,7 @@ msgid "Visible to nearby devices"
 msgstr "Yakındaki görünür cihazlar"
 
 #: src/shell/main.cpp:215 src/shell/qml/Main.qml:272
-#: src/shell/qml/SettingsPage.qml:13 src/shell/qml/ShortcutsDialog.qml:13
+#: src/shell/qml/SettingsPage.qml:13 src/shell/qml/ShortcutsDialog.qml:14
 msgid "Preferences"
 msgstr "Tercihler"
 
@@ -94,7 +94,7 @@ msgid "About"
 msgstr "Hakında"
 
 #: src/shell/qml/AboutDialog.qml:109 src/shell/qml/PairDialog.qml:69
-#: src/shell/qml/ShortcutsDialog.qml:75
+#: src/shell/qml/ShortcutsDialog.qml:76
 msgid "Close"
 msgstr "Kapat"
 
@@ -161,7 +161,7 @@ msgid "Kirigami, notifications, jobs and the other KDE libraries"
 msgstr "Kirigami, bildirimler, İşler ve the diğer KDE küthüpaneleri"
 
 #: src/shell/qml/HelpPage.qml:12 src/shell/qml/Main.qml:293
-#: src/shell/qml/ShortcutsDialog.qml:14 src/shell/qml/ShortcutsDialog.qml:15
+#: src/shell/qml/ShortcutsDialog.qml:15 src/shell/qml/ShortcutsDialog.qml:16
 msgid "Help"
 msgstr "Yardım"
 
@@ -379,7 +379,7 @@ msgstr "Paylaşımlar"
 msgid "More"
 msgstr "Daha fazla"
 
-#: src/shell/qml/Main.qml:279 src/shell/qml/ShortcutsDialog.qml:40
+#: src/shell/qml/Main.qml:279 src/shell/qml/ShortcutsDialog.qml:41
 msgid "Shortcuts"
 msgstr "Kısayolar"
 
@@ -454,7 +454,7 @@ msgstr "Eşleşme tamamlanmadı"
 msgid "Remove"
 msgstr "Kaldır"
 
-#: src/shell/qml/SendPage.qml:184 src/shell/qml/ShortcutsDialog.qml:17
+#: src/shell/qml/SendPage.qml:184 src/shell/qml/ShortcutsDialog.qml:18
 msgid "Choose files to send"
 msgstr "Göndermek için dosya seç"
 
@@ -502,7 +502,7 @@ msgstr "yada seçmek için tıkla"
 msgid "Paste from clipboard"
 msgstr "Panodan yapıştır"
 
-#: src/shell/qml/SendPage.qml:284 src/shell/qml/TransfersPage.qml:370
+#: src/shell/qml/SendPage.qml:284 src/shell/qml/TransfersPage.qml:373
 #: src/shell/transferwatcher.cpp:51 src/shell/transferwatcher.cpp:140
 msgid "%1 file"
 msgid_plural "%1 files"
@@ -852,71 +852,80 @@ msgstr "Tercihleri sıfırla…"
 msgid "Go back to the default preferences"
 msgstr "İlk tercih ayarlarına geri dön"
 
-#: src/shell/qml/ShortcutsDialog.qml:16
-msgid "Show the shortcuts"
-msgstr "Kısayoları göster"
-
-#: src/shell/qml/ShortcutsDialog.qml:18
-msgid "Paste files, an image or text from the clipboard"
-msgstr "Dosyaları yapıştır, panodan bir resim yada metin"
-
-#: src/shell/qml/ShortcutsDialog.qml:19
-msgid "Clear files and text"
-msgstr "Metin ve dosyaları temizle"
-
-#: src/shell/qml/ShortcutsDialog.qml:20
-msgid "Close the window"
-msgstr "Pencereyi kapat"
-
-#: src/shell/qml/ShortcutsDialog.qml:21
-msgid "Quit KuickShare"
-msgstr "KuickShare den çık"
-
-#: src/shell/qml/TransfersPage.qml:38
+#: src/shell/qml/ShortcutsDialog.qml:13 src/shell/qml/TransfersPage.qml:38
+#: src/shell/qml/TransfersPage.qml:39
 msgid "Search transfers"
 msgstr "Paylaşımlarda ara"
 
-#: src/shell/qml/TransfersPage.qml:47 src/shell/qml/TransfersPage.qml:401
+#: src/shell/qml/ShortcutsDialog.qml:17
+msgid "Show the shortcuts"
+msgstr "Kısayoları göster"
+
+#: src/shell/qml/ShortcutsDialog.qml:19
+msgid "Paste files, an image or text from the clipboard"
+msgstr "Dosyaları yapıştır, panodan bir resim yada metin"
+
+#: src/shell/qml/ShortcutsDialog.qml:20
+msgid "Clear files and text"
+msgstr "Metin ve dosyaları temizle"
+
+#: src/shell/qml/ShortcutsDialog.qml:21
+msgid "Close the window"
+msgstr "Pencereyi kapat"
+
+#: src/shell/qml/ShortcutsDialog.qml:22
+msgid "Quit KuickShare"
+msgstr "KuickShare den çık"
+
+#: src/shell/qml/TransfersPage.qml:48 src/shell/qml/TransfersPage.qml:404
 msgid "Clear history"
 msgstr "Geçmişi temizle"
 
-#: src/shell/qml/TransfersPage.qml:66
+#: src/shell/qml/TransfersPage.qml:67
 msgid "All transfers"
 msgstr "Tüm paylaşımlar"
 
-#: src/shell/qml/TransfersPage.qml:67 src/shell/qml/TransfersPage.qml:355
+#: src/shell/qml/TransfersPage.qml:68 src/shell/qml/TransfersPage.qml:358
 msgid "Received"
 msgstr "Alındı"
 
-#: src/shell/qml/TransfersPage.qml:68 src/shell/qml/TransfersPage.qml:355
+#: src/shell/qml/TransfersPage.qml:69 src/shell/qml/TransfersPage.qml:358
 msgid "Sent"
 msgstr "Gönderildi"
 
-#: src/shell/qml/TransfersPage.qml:90
+#: src/shell/qml/TransfersPage.qml:71
+msgid "Filter by direction"
+msgstr "Yöne göre filtrele"
+
+#: src/shell/qml/TransfersPage.qml:92
 msgid "Any status"
 msgstr "Herhangi bir durum"
 
-#: src/shell/qml/TransfersPage.qml:91
+#: src/shell/qml/TransfersPage.qml:93
 msgid "In progress"
 msgstr "Devam ediyor"
 
-#: src/shell/qml/TransfersPage.qml:92
+#: src/shell/qml/TransfersPage.qml:94
 msgid "Completed"
 msgstr "Tamamlandı"
 
-#: src/shell/qml/TransfersPage.qml:93
+#: src/shell/qml/TransfersPage.qml:95
 msgid "Not completed"
 msgstr "Tamamlanmadı"
 
-#: src/shell/qml/TransfersPage.qml:110
+#: src/shell/qml/TransfersPage.qml:97
+msgid "Filter by status"
+msgstr "Duruma göre filtrele"
+
+#: src/shell/qml/TransfersPage.qml:113
 msgid "Reset filters"
 msgstr "Filtreleri sıfırla"
 
-#: src/shell/qml/TransfersPage.qml:126
+#: src/shell/qml/TransfersPage.qml:129
 msgid "Clear history?"
 msgstr "Geçmişi silicekmisiniz?"
 
-#: src/shell/qml/TransfersPage.qml:127
+#: src/shell/qml/TransfersPage.qml:130
 msgid ""
 "The whole history is cleared, not only the transfers shown. Files you "
 "received are not touched"
@@ -924,89 +933,89 @@ msgstr ""
 "Yalnızca gösterilen paylaşımlar değil, tüm geçmiş silinir. Aldığınız "
 "dosyalara dokunulmaz"
 
-#: src/shell/qml/TransfersPage.qml:127
+#: src/shell/qml/TransfersPage.qml:130
 msgid "Files you received are not touched"
 msgstr "Aldığınız dosyalara dokunulmaz"
 
-#: src/shell/qml/TransfersPage.qml:184
+#: src/shell/qml/TransfersPage.qml:187
 msgid "Transfer details"
 msgstr "Paylaşım detayları"
 
-#: src/shell/qml/TransfersPage.qml:207
+#: src/shell/qml/TransfersPage.qml:210
 msgid "Result"
 msgstr "Sonuç"
 
-#: src/shell/qml/TransfersPage.qml:207
+#: src/shell/qml/TransfersPage.qml:210
 msgid "Size"
 msgstr "Boyut"
 
-#: src/shell/qml/TransfersPage.qml:233 src/shell/transferwatcher.cpp:248
+#: src/shell/qml/TransfersPage.qml:236 src/shell/transferwatcher.cpp:248
 msgid "Open link"
 msgstr "Linki aç"
 
-#: src/shell/qml/TransfersPage.qml:240 src/shell/qml/TransfersPage.qml:704
+#: src/shell/qml/TransfersPage.qml:243 src/shell/qml/TransfersPage.qml:707
 msgid "Copy"
 msgstr "Kopyala"
 
-#: src/shell/qml/TransfersPage.qml:245 src/shell/qml/TransfersPage.qml:708
+#: src/shell/qml/TransfersPage.qml:248 src/shell/qml/TransfersPage.qml:711
 msgid "Copied to clipboard"
 msgstr "Panoya kopyalandı"
 
-#: src/shell/qml/TransfersPage.qml:344 src/shell/transferwatcher.cpp:52
+#: src/shell/qml/TransfersPage.qml:347 src/shell/transferwatcher.cpp:52
 msgid "Looking for the device…"
 msgstr "Cihaz aranıyor…"
 
-#: src/shell/qml/TransfersPage.qml:344 src/shell/qml/TransfersPage.qml:350
-#: src/shell/qml/TransfersPage.qml:364 src/shell/transferwatcher.cpp:52
+#: src/shell/qml/TransfersPage.qml:347 src/shell/qml/TransfersPage.qml:353
+#: src/shell/qml/TransfersPage.qml:367 src/shell/transferwatcher.cpp:52
 #: src/shell/transferwatcher.cpp:111
 msgid "Connecting…"
 msgstr "Bağlanılıyor…"
 
-#: src/shell/qml/TransfersPage.qml:346
+#: src/shell/qml/TransfersPage.qml:349
 msgid "Waiting for your approval"
 msgstr "Onayınız bekleniyor"
 
-#: src/shell/qml/TransfersPage.qml:348
+#: src/shell/qml/TransfersPage.qml:351
 msgid "Receiving…"
 msgstr "Alınıyor…"
 
-#: src/shell/qml/TransfersPage.qml:350 src/shell/transferwatcher.cpp:111
+#: src/shell/qml/TransfersPage.qml:353 src/shell/transferwatcher.cpp:111
 msgid "Waiting for the other device to accept"
 msgstr "Diğer cihazın kabul etmesi bekleniyor"
 
-#: src/shell/qml/TransfersPage.qml:353 src/shell/transferwatcher.cpp:127
+#: src/shell/qml/TransfersPage.qml:356 src/shell/transferwatcher.cpp:127
 msgid "Switching to Wi-Fi…"
 msgstr "Wi-Fi'ye geçiliyor…"
 
-#: src/shell/qml/TransfersPage.qml:353
+#: src/shell/qml/TransfersPage.qml:356
 msgid "Sending…"
 msgstr "Gönderiliyor…"
 
-#: src/shell/qml/TransfersPage.qml:357
+#: src/shell/qml/TransfersPage.qml:360
 msgid "Cancelled"
 msgstr "Vazgeçildi"
 
-#: src/shell/qml/TransfersPage.qml:359
+#: src/shell/qml/TransfersPage.qml:362
 msgid "Declined"
 msgstr "Reddedildi"
 
-#: src/shell/qml/TransfersPage.qml:359
+#: src/shell/qml/TransfersPage.qml:362
 msgid "You declined"
 msgstr "Reddettiniz"
 
-#: src/shell/qml/TransfersPage.qml:362
+#: src/shell/qml/TransfersPage.qml:365
 msgid "Not accepted"
 msgstr "Kabuledilmedi"
 
-#: src/shell/qml/TransfersPage.qml:362
+#: src/shell/qml/TransfersPage.qml:365
 msgid "Interrupted"
 msgstr "İptal edildi"
 
-#: src/shell/qml/TransfersPage.qml:398
+#: src/shell/qml/TransfersPage.qml:401
 msgid "The history is large (%1) and may slow KuickShare down"
 msgstr "Geçmiş çok büyük (%1) ve belki KuickShare i yavaşlatabilir"
 
-#: src/shell/qml/TransfersPage.qml:412
+#: src/shell/qml/TransfersPage.qml:415
 msgid ""
 "History is turned off: new transfers are not saved. You can turn it on in "
 "Preferences"
@@ -1014,19 +1023,19 @@ msgstr ""
 "Geçmiş kapalı: yeni paylaşımlar kaydedilmiyor. Bölümünde açabilirsiniz: "
 "Tercihler"
 
-#: src/shell/qml/TransfersPage.qml:422
+#: src/shell/qml/TransfersPage.qml:425
 msgid "No matching transfers"
 msgstr "Eşleşen paylaşım yok"
 
-#: src/shell/qml/TransfersPage.qml:422
+#: src/shell/qml/TransfersPage.qml:425
 msgid "No transfers yet"
 msgstr "Şimdilik hiç paylaşım yok"
 
-#: src/shell/qml/TransfersPage.qml:422
+#: src/shell/qml/TransfersPage.qml:425
 msgid "Starting the sharing service…"
 msgstr "Paylaşım servisi başlatılıyor…"
 
-#: src/shell/qml/TransfersPage.qml:423
+#: src/shell/qml/TransfersPage.qml:426
 msgid ""
 "Sent and received transfers are listed here. Make sure this computer is "
 "visible in Preferences to receive."
@@ -1034,49 +1043,49 @@ msgstr ""
 "Gönderilmiş ve alınmış paylaşımlar burda listeli. Bu makinanın tercihlerde "
 "görünür olduğundan emin olun."
 
-#: src/shell/qml/TransfersPage.qml:423
+#: src/shell/qml/TransfersPage.qml:426
 msgid ""
 "Transfers are only listed while the app is open, because the history is "
 "turned off."
 msgstr "Paylaşımlar sadece program açıken listede çünkü geçmiş Kapalı."
 
-#: src/shell/qml/TransfersPage.qml:581
+#: src/shell/qml/TransfersPage.qml:584
 msgid "Unknown device"
 msgstr "Bilinmeyen cihaz"
 
-#: src/shell/qml/TransfersPage.qml:606
+#: src/shell/qml/TransfersPage.qml:609
 msgid "Trusted"
 msgstr "Güvenilen"
 
-#: src/shell/qml/TransfersPage.qml:615
+#: src/shell/qml/TransfersPage.qml:618
 msgid "%1%"
 msgstr "%1%"
 
-#: src/shell/qml/TransfersPage.qml:622
+#: src/shell/qml/TransfersPage.qml:625
 msgid "Cancel"
 msgstr "Vazgeç"
 
-#: src/shell/qml/TransfersPage.qml:629
+#: src/shell/qml/TransfersPage.qml:632
 msgid "Remove from list"
 msgstr "Listeden kaldır"
 
-#: src/shell/qml/TransfersPage.qml:639
+#: src/shell/qml/TransfersPage.qml:642
 msgid "Wants to share with you · PIN %1"
 msgstr "Seninle paylaşmak istiyor · PIN %1"
 
-#: src/shell/qml/TransfersPage.qml:648
+#: src/shell/qml/TransfersPage.qml:651
 msgid "More details"
 msgstr "Daha çok detay"
 
-#: src/shell/qml/TransfersPage.qml:686 src/shell/transferwatcher.cpp:206
+#: src/shell/qml/TransfersPage.qml:689 src/shell/transferwatcher.cpp:206
 msgid "Accept"
 msgstr "Kabulet"
 
-#: src/shell/qml/TransfersPage.qml:692 src/shell/transferwatcher.cpp:221
+#: src/shell/qml/TransfersPage.qml:695 src/shell/transferwatcher.cpp:221
 msgid "Decline"
 msgstr "Reddet"
 
-#: src/shell/qml/TransfersPage.qml:698 src/shell/transferwatcher.cpp:269
+#: src/shell/qml/TransfersPage.qml:701 src/shell/transferwatcher.cpp:269
 msgid "Open folder"
 msgstr "Klasörü aç"
 

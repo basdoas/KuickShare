@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kuickshare 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 10:11+0000\n"
+"POT-Creation-Date: 2026-10-24 17:15+0000\n"
 "PO-Revision-Date: 2026-10-18 00:00+0000\n"
 "Last-Translator: the-beper <193650145+the-beper@users.noreply.github.com>\n"
 "Language-Team: Italian\n"
@@ -81,7 +81,7 @@ msgid "Visible to nearby devices"
 msgstr "Visibile ai dispositivi vicini"
 
 #: src/shell/main.cpp:215 src/shell/qml/Main.qml:272
-#: src/shell/qml/SettingsPage.qml:13 src/shell/qml/ShortcutsDialog.qml:13
+#: src/shell/qml/SettingsPage.qml:13 src/shell/qml/ShortcutsDialog.qml:14
 msgid "Preferences"
 msgstr "Preferenze"
 
@@ -94,7 +94,7 @@ msgid "About"
 msgstr "Informazioni"
 
 #: src/shell/qml/AboutDialog.qml:109 src/shell/qml/PairDialog.qml:69
-#: src/shell/qml/ShortcutsDialog.qml:75
+#: src/shell/qml/ShortcutsDialog.qml:76
 msgid "Close"
 msgstr "Chiudi"
 
@@ -160,7 +160,7 @@ msgid "Kirigami, notifications, jobs and the other KDE libraries"
 msgstr "Kirigami, notifiche, attività e le altre librerie KDE"
 
 #: src/shell/qml/HelpPage.qml:12 src/shell/qml/Main.qml:293
-#: src/shell/qml/ShortcutsDialog.qml:14 src/shell/qml/ShortcutsDialog.qml:15
+#: src/shell/qml/ShortcutsDialog.qml:15 src/shell/qml/ShortcutsDialog.qml:16
 msgid "Help"
 msgstr "Aiuto"
 
@@ -382,7 +382,7 @@ msgstr "Trasferimenti"
 msgid "More"
 msgstr "Altro"
 
-#: src/shell/qml/Main.qml:279 src/shell/qml/ShortcutsDialog.qml:40
+#: src/shell/qml/Main.qml:279 src/shell/qml/ShortcutsDialog.qml:41
 msgid "Shortcuts"
 msgstr "Scorciatoie"
 
@@ -461,7 +461,7 @@ msgstr "Associazione non completata"
 msgid "Remove"
 msgstr "Rimuovi"
 
-#: src/shell/qml/SendPage.qml:184 src/shell/qml/ShortcutsDialog.qml:17
+#: src/shell/qml/SendPage.qml:184 src/shell/qml/ShortcutsDialog.qml:18
 msgid "Choose files to send"
 msgstr "Scegli i file da inviare"
 
@@ -509,7 +509,7 @@ msgstr "oppure fai clic per sceglierli"
 msgid "Paste from clipboard"
 msgstr "Incolla dagli appunti"
 
-#: src/shell/qml/SendPage.qml:284 src/shell/qml/TransfersPage.qml:370
+#: src/shell/qml/SendPage.qml:284 src/shell/qml/TransfersPage.qml:373
 #: src/shell/transferwatcher.cpp:51 src/shell/transferwatcher.cpp:140
 msgid "%1 file"
 msgid_plural "%1 files"
@@ -863,71 +863,80 @@ msgstr "Reimposta preferenze…"
 msgid "Go back to the default preferences"
 msgstr "Torna alle preferenze predefinite"
 
-#: src/shell/qml/ShortcutsDialog.qml:16
-msgid "Show the shortcuts"
-msgstr "Mostra le scorciatoie"
-
-#: src/shell/qml/ShortcutsDialog.qml:18
-msgid "Paste files, an image or text from the clipboard"
-msgstr "Incolla file, un’immagine o del testo dagli appunti"
-
-#: src/shell/qml/ShortcutsDialog.qml:19
-msgid "Clear files and text"
-msgstr "Svuota file e testo"
-
-#: src/shell/qml/ShortcutsDialog.qml:20
-msgid "Close the window"
-msgstr "Chiudi la finestra"
-
-#: src/shell/qml/ShortcutsDialog.qml:21
-msgid "Quit KuickShare"
-msgstr "Esci da KuickShare"
-
-#: src/shell/qml/TransfersPage.qml:38
+#: src/shell/qml/ShortcutsDialog.qml:13 src/shell/qml/TransfersPage.qml:38
+#: src/shell/qml/TransfersPage.qml:39
 msgid "Search transfers"
 msgstr "Cerca trasferimenti"
 
-#: src/shell/qml/TransfersPage.qml:47 src/shell/qml/TransfersPage.qml:401
+#: src/shell/qml/ShortcutsDialog.qml:17
+msgid "Show the shortcuts"
+msgstr "Mostra le scorciatoie"
+
+#: src/shell/qml/ShortcutsDialog.qml:19
+msgid "Paste files, an image or text from the clipboard"
+msgstr "Incolla file, un’immagine o del testo dagli appunti"
+
+#: src/shell/qml/ShortcutsDialog.qml:20
+msgid "Clear files and text"
+msgstr "Svuota file e testo"
+
+#: src/shell/qml/ShortcutsDialog.qml:21
+msgid "Close the window"
+msgstr "Chiudi la finestra"
+
+#: src/shell/qml/ShortcutsDialog.qml:22
+msgid "Quit KuickShare"
+msgstr "Esci da KuickShare"
+
+#: src/shell/qml/TransfersPage.qml:48 src/shell/qml/TransfersPage.qml:404
 msgid "Clear history"
 msgstr "Svuota cronologia"
 
-#: src/shell/qml/TransfersPage.qml:66
+#: src/shell/qml/TransfersPage.qml:67
 msgid "All transfers"
 msgstr "Tutti i trasferimenti"
 
-#: src/shell/qml/TransfersPage.qml:67 src/shell/qml/TransfersPage.qml:355
+#: src/shell/qml/TransfersPage.qml:68 src/shell/qml/TransfersPage.qml:358
 msgid "Received"
 msgstr "Ricevuto"
 
-#: src/shell/qml/TransfersPage.qml:68 src/shell/qml/TransfersPage.qml:355
+#: src/shell/qml/TransfersPage.qml:69 src/shell/qml/TransfersPage.qml:358
 msgid "Sent"
 msgstr "Inviato"
 
-#: src/shell/qml/TransfersPage.qml:90
+#: src/shell/qml/TransfersPage.qml:71
+msgid "Filter by direction"
+msgstr "Filtra per direzione"
+
+#: src/shell/qml/TransfersPage.qml:92
 msgid "Any status"
 msgstr "Qualsiasi stato"
 
-#: src/shell/qml/TransfersPage.qml:91
+#: src/shell/qml/TransfersPage.qml:93
 msgid "In progress"
 msgstr "In corso"
 
-#: src/shell/qml/TransfersPage.qml:92
+#: src/shell/qml/TransfersPage.qml:94
 msgid "Completed"
 msgstr "Completato"
 
-#: src/shell/qml/TransfersPage.qml:93
+#: src/shell/qml/TransfersPage.qml:95
 msgid "Not completed"
 msgstr "Non completato"
 
-#: src/shell/qml/TransfersPage.qml:110
+#: src/shell/qml/TransfersPage.qml:97
+msgid "Filter by status"
+msgstr "Filtra per stato"
+
+#: src/shell/qml/TransfersPage.qml:113
 msgid "Reset filters"
 msgstr "Reimposta filtri"
 
-#: src/shell/qml/TransfersPage.qml:126
+#: src/shell/qml/TransfersPage.qml:129
 msgid "Clear history?"
 msgstr "Svuotare la cronologia?"
 
-#: src/shell/qml/TransfersPage.qml:127
+#: src/shell/qml/TransfersPage.qml:130
 msgid ""
 "The whole history is cleared, not only the transfers shown. Files you "
 "received are not touched"
@@ -935,89 +944,89 @@ msgstr ""
 "Viene cancellata tutta la cronologia, non solo i trasferimenti mostrati. I "
 "file ricevuti non vengono toccati"
 
-#: src/shell/qml/TransfersPage.qml:127
+#: src/shell/qml/TransfersPage.qml:130
 msgid "Files you received are not touched"
 msgstr "I file ricevuti non vengono toccati"
 
-#: src/shell/qml/TransfersPage.qml:184
+#: src/shell/qml/TransfersPage.qml:187
 msgid "Transfer details"
 msgstr "Dettagli del trasferimento"
 
-#: src/shell/qml/TransfersPage.qml:207
+#: src/shell/qml/TransfersPage.qml:210
 msgid "Result"
 msgstr "Risultato"
 
-#: src/shell/qml/TransfersPage.qml:207
+#: src/shell/qml/TransfersPage.qml:210
 msgid "Size"
 msgstr "Dimensione"
 
-#: src/shell/qml/TransfersPage.qml:233 src/shell/transferwatcher.cpp:248
+#: src/shell/qml/TransfersPage.qml:236 src/shell/transferwatcher.cpp:248
 msgid "Open link"
 msgstr "Apri collegamento"
 
-#: src/shell/qml/TransfersPage.qml:240 src/shell/qml/TransfersPage.qml:704
+#: src/shell/qml/TransfersPage.qml:243 src/shell/qml/TransfersPage.qml:707
 msgid "Copy"
 msgstr "Copia"
 
-#: src/shell/qml/TransfersPage.qml:245 src/shell/qml/TransfersPage.qml:708
+#: src/shell/qml/TransfersPage.qml:248 src/shell/qml/TransfersPage.qml:711
 msgid "Copied to clipboard"
 msgstr "Copiato negli appunti"
 
-#: src/shell/qml/TransfersPage.qml:344 src/shell/transferwatcher.cpp:52
+#: src/shell/qml/TransfersPage.qml:347 src/shell/transferwatcher.cpp:52
 msgid "Looking for the device…"
 msgstr "Ricerca del dispositivo…"
 
-#: src/shell/qml/TransfersPage.qml:344 src/shell/qml/TransfersPage.qml:350
-#: src/shell/qml/TransfersPage.qml:364 src/shell/transferwatcher.cpp:52
+#: src/shell/qml/TransfersPage.qml:347 src/shell/qml/TransfersPage.qml:353
+#: src/shell/qml/TransfersPage.qml:367 src/shell/transferwatcher.cpp:52
 #: src/shell/transferwatcher.cpp:111
 msgid "Connecting…"
 msgstr "Connessione in corso…"
 
-#: src/shell/qml/TransfersPage.qml:346
+#: src/shell/qml/TransfersPage.qml:349
 msgid "Waiting for your approval"
 msgstr "In attesa della tua approvazione"
 
-#: src/shell/qml/TransfersPage.qml:348
+#: src/shell/qml/TransfersPage.qml:351
 msgid "Receiving…"
 msgstr "Ricezione in corso…"
 
-#: src/shell/qml/TransfersPage.qml:350 src/shell/transferwatcher.cpp:111
+#: src/shell/qml/TransfersPage.qml:353 src/shell/transferwatcher.cpp:111
 msgid "Waiting for the other device to accept"
 msgstr "In attesa che l’altro dispositivo accetti"
 
-#: src/shell/qml/TransfersPage.qml:353 src/shell/transferwatcher.cpp:127
+#: src/shell/qml/TransfersPage.qml:356 src/shell/transferwatcher.cpp:127
 msgid "Switching to Wi-Fi…"
 msgstr "Passaggio al Wi-Fi…"
 
-#: src/shell/qml/TransfersPage.qml:353
+#: src/shell/qml/TransfersPage.qml:356
 msgid "Sending…"
 msgstr "Invio in corso…"
 
-#: src/shell/qml/TransfersPage.qml:357
+#: src/shell/qml/TransfersPage.qml:360
 msgid "Cancelled"
 msgstr "Annullato"
 
-#: src/shell/qml/TransfersPage.qml:359
+#: src/shell/qml/TransfersPage.qml:362
 msgid "Declined"
 msgstr "Rifiutato"
 
-#: src/shell/qml/TransfersPage.qml:359
+#: src/shell/qml/TransfersPage.qml:362
 msgid "You declined"
 msgstr "Hai rifiutato"
 
-#: src/shell/qml/TransfersPage.qml:362
+#: src/shell/qml/TransfersPage.qml:365
 msgid "Not accepted"
 msgstr "Non accettato"
 
-#: src/shell/qml/TransfersPage.qml:362
+#: src/shell/qml/TransfersPage.qml:365
 msgid "Interrupted"
 msgstr "Interrotto"
 
-#: src/shell/qml/TransfersPage.qml:398
+#: src/shell/qml/TransfersPage.qml:401
 msgid "The history is large (%1) and may slow KuickShare down"
 msgstr "La cronologia è grande (%1) e potrebbe rallentare KuickShare"
 
-#: src/shell/qml/TransfersPage.qml:412
+#: src/shell/qml/TransfersPage.qml:415
 msgid ""
 "History is turned off: new transfers are not saved. You can turn it on in "
 "Preferences"
@@ -1025,19 +1034,19 @@ msgstr ""
 "La cronologia è disattivata: i nuovi trasferimenti non vengono salvati. Puoi "
 "attivarla nelle Preferenze"
 
-#: src/shell/qml/TransfersPage.qml:422
+#: src/shell/qml/TransfersPage.qml:425
 msgid "No matching transfers"
 msgstr "Nessun trasferimento corrispondente"
 
-#: src/shell/qml/TransfersPage.qml:422
+#: src/shell/qml/TransfersPage.qml:425
 msgid "No transfers yet"
 msgstr "Nessun trasferimento"
 
-#: src/shell/qml/TransfersPage.qml:422
+#: src/shell/qml/TransfersPage.qml:425
 msgid "Starting the sharing service…"
 msgstr "Avvio del servizio di condivisione…"
 
-#: src/shell/qml/TransfersPage.qml:423
+#: src/shell/qml/TransfersPage.qml:426
 msgid ""
 "Sent and received transfers are listed here. Make sure this computer is "
 "visible in Preferences to receive."
@@ -1045,7 +1054,7 @@ msgstr ""
 "I trasferimenti inviati e ricevuti sono elencati qui. Per ricevere, "
 "assicurati che questo computer sia visibile nelle Preferenze."
 
-#: src/shell/qml/TransfersPage.qml:423
+#: src/shell/qml/TransfersPage.qml:426
 msgid ""
 "Transfers are only listed while the app is open, because the history is "
 "turned off."
@@ -1053,43 +1062,43 @@ msgstr ""
 "I trasferimenti sono elencati solo mentre l'applicazione è aperta, perché la "
 "cronologia è disattivata."
 
-#: src/shell/qml/TransfersPage.qml:581
+#: src/shell/qml/TransfersPage.qml:584
 msgid "Unknown device"
 msgstr "Dispositivo sconosciuto"
 
-#: src/shell/qml/TransfersPage.qml:606
+#: src/shell/qml/TransfersPage.qml:609
 msgid "Trusted"
 msgstr "Attendibile"
 
-#: src/shell/qml/TransfersPage.qml:615
+#: src/shell/qml/TransfersPage.qml:618
 msgid "%1%"
 msgstr "%1%"
 
-#: src/shell/qml/TransfersPage.qml:622
+#: src/shell/qml/TransfersPage.qml:625
 msgid "Cancel"
 msgstr "Annulla"
 
-#: src/shell/qml/TransfersPage.qml:629
+#: src/shell/qml/TransfersPage.qml:632
 msgid "Remove from list"
 msgstr "Rimuovi dall'elenco"
 
-#: src/shell/qml/TransfersPage.qml:639
+#: src/shell/qml/TransfersPage.qml:642
 msgid "Wants to share with you · PIN %1"
 msgstr "Vuole condividere con te · PIN %1"
 
-#: src/shell/qml/TransfersPage.qml:648
+#: src/shell/qml/TransfersPage.qml:651
 msgid "More details"
 msgstr "Altri dettagli"
 
-#: src/shell/qml/TransfersPage.qml:686 src/shell/transferwatcher.cpp:206
+#: src/shell/qml/TransfersPage.qml:689 src/shell/transferwatcher.cpp:206
 msgid "Accept"
 msgstr "Accetta"
 
-#: src/shell/qml/TransfersPage.qml:692 src/shell/transferwatcher.cpp:221
+#: src/shell/qml/TransfersPage.qml:695 src/shell/transferwatcher.cpp:221
 msgid "Decline"
 msgstr "Rifiuta"
 
-#: src/shell/qml/TransfersPage.qml:698 src/shell/transferwatcher.cpp:269
+#: src/shell/qml/TransfersPage.qml:701 src/shell/transferwatcher.cpp:269
 msgid "Open folder"
 msgstr "Apri cartella"
 

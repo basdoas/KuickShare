@@ -330,6 +330,7 @@ Also listed in the app under More, Shortcuts.
 |---|---|
 | `Ctrl+1` | Send page |
 | `Ctrl+2` | Transfers page |
+| `Ctrl+F` | On the Transfers page: go to the search field |
 | `Ctrl+,` | Preferences |
 | `Ctrl+H`, `F1` | Help |
 | `Ctrl+?` | Show the shortcuts |

@@ -10,6 +10,7 @@ Kirigami.Dialog {
     readonly property var rows: [
         ["Ctrl+1", i18n("Send")],
         ["Ctrl+2", i18n("Transfers")],
+        ["Ctrl+F", i18n("Search transfers")],
         ["Ctrl+,", i18n("Preferences")],
         ["Ctrl+H", i18n("Help")],
         ["F1", i18n("Help")],

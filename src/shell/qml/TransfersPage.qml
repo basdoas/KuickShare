@@ -36,6 +36,7 @@ Kirigami.ScrollablePage {
                 Layout.fillWidth: true
                 Layout.preferredHeight: bar.controlHeight
                 placeholderText: i18n("Search transfers")
+                Accessible.name: i18n("Search transfers")
                 text: page.filter.text
                 onTextChanged: page.filter.text = text
             }
@@ -67,6 +68,7 @@ Kirigami.ScrollablePage {
                         {text: i18n("Received"), value: "inbound"},
                         {text: i18n("Sent"), value: "outbound"}
                     ]
+                    Accessible.name: i18n("Filter by direction")
                     // The menu is as wide as the box.
                     popup.width: directionBox.width
                     onActivated: page.filter.direction = currentValue
@@ -92,6 +94,7 @@ Kirigami.ScrollablePage {
                         {text: i18n("Completed"), value: "done"},
                         {text: i18n("Not completed"), value: "failed"}
                     ]
+                    Accessible.name: i18n("Filter by status")
                     popup.width: statusBox.width
                     onActivated: page.filter.status = currentValue
 

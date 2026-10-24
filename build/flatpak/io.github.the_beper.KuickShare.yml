@@ -51,9 +51,9 @@ modules:
     subdir: src/shell
     config-opts:
       - -DCMAKE_BUILD_TYPE=Release
+      - -DKDE_INSTALL_LIBDIR=lib
     post-install:
       - install -Dm644 /run/build/kuickshare/data/io.github.the_beper.KuickShare.metainfo.xml /app/share/metainfo/io.github.the_beper.KuickShare.metainfo.xml
-      # KF6 looks for notification definitions in knotifications6.
       - install -Dm644 /run/build/kuickshare/data/kuickshare.notifyrc /app/share/knotifications6/kuickshare.notifyrc
       - |
         cd /run/build/kuickshare

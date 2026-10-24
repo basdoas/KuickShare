@@ -8,3 +8,4 @@ Icon=io.github.the_beper.KuickShare
 Terminal=false
 Categories=Network;FileTransfer;Qt;KDE;
 StartupNotify=true
+StartupWMClass=kuickshare

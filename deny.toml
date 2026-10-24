@@ -1,12 +1,15 @@
 # Checked in CI with `cargo deny check`; locally: cargo install cargo-deny, then cargo deny check.
 
+# The project is Linux only: leave the crates of other platforms out of the checks.
+[graph]
+targets = ["x86_64-unknown-linux-gnu"]
+
 [advisories]
 
 [licenses]
 allow = [
     "Apache-2.0",
     "Apache-2.0 WITH LLVM-exception",
-    "BSD-1-Clause",
     "BSD-2-Clause",
     "BSD-3-Clause",
     "GPL-3.0-or-later",

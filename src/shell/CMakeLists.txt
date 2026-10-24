@@ -54,6 +54,8 @@ qt_add_qml_module(kuickshare
     URI io.github.the_beper.KuickShare
     RESOURCE_PREFIX /qt/qml
     NO_CACHEGEN
+    # The shell is not linked statically: its QML modules are found at run time, so nothing needs the plugin scan.
+    NO_IMPORT_SCAN
     QML_FILES
         qml/Main.qml
         qml/TransfersPage.qml

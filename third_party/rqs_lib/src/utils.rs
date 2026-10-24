@@ -5,8 +5,8 @@ use anyhow::anyhow;
 use base64::Engine;
 use base64::engine::general_purpose::URL_SAFE_NO_PAD;
 use bytes::Bytes;
-use get_if_addrs::get_if_addrs;
 use hkdf::Hkdf;
+use if_addrs::get_if_addrs;
 use num_bigint::{BigUint, ToBigInt};
 use p256::elliptic_curve::Generate;
 use p256::{PublicKey, SecretKey};
@@ -273,6 +273,15 @@ pub fn get_download_dir() -> PathBuf {
     Path::new("/").to_path_buf()
 }
 
+/// The machine hostname, or "Unknown device" when it cannot be read.
+pub fn hostname() -> String {
+    std::fs::read_to_string("/proc/sys/kernel/hostname")
+        .map(|s| s.trim().to_owned())
+        .ok()
+        .filter(|s| !s.is_empty())
+        .unwrap_or_else(|| "Unknown device".to_owned())
+}
+
 pub fn is_not_self_ip(ip_address: &Ipv4Addr) -> bool {
     if let Ok(if_addrs) = get_if_addrs() {
         for if_addr in if_addrs {
@@ -301,6 +310,11 @@ pub fn create_text_preview(text: &str, max_chars: usize) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn the_hostname_is_never_empty() {
+        assert!(!hostname().is_empty());
+    }
 
     /// A frame split across reads, with the read future dropped in between (as a `select!`
     /// does), resumes at the same byte: nothing is lost or read twice.

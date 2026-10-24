@@ -4,7 +4,7 @@ Quick Share client for KDE Plasma 6: Rust daemon `kuickshared` (`src/core`, prot
 
 ## Commands
 - Everything that needs Qt, KF6, ECM or `dbus-daemon` runs through `build/build-env.sh <command>` (podman). A bare `cmake` on the host fails with a missing ECM.
-- Full check: the `/check` skill (rustfmt in the root and in `third_party/rqs_lib`, Clippy `-D warnings`, `cargo test --all-features`, `cargo test -p rqs_lib`, CMake build + `ctest`, `qmllint-qt6`, catalogs). `cargo test -p rqs_lib` leaves an untracked `third_party/rqs_lib/Cargo.lock`: delete it.
+- Full check: the `/check` skill, which runs `build/build-env.sh build/check.sh` (the list of checks lives in that script, CI runs it too) plus the `po.py` catalog status. `build/Containerfile` is also CI's image (ghcr, `images.yml`): after changing it, rebuild the local one with `podman build -t localhost/kuickshare-build:fedora45 -f build/Containerfile build`.
 - Dev build: `build/build-env.sh cargo build` and `build/build-env.sh cmake --build dist/tmp/cmake-dev`. `dist/`, `target/` and `dist/test-wifi.sh` are not in git.
 
 ## Conventions that are not obvious

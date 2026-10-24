@@ -4,7 +4,7 @@
 # Usage: build/flatpak/build-flatpak.sh [flatpak-builder options...]
 set -eu
 root=$(cd "$(dirname "$0")/../.." && pwd)
-image=localhost/kuickshare-flatpak:fedora44
+image=localhost/kuickshare-flatpak:fedora45
 
 if [ ! -e /run/.containerenv ]; then
     podman image exists "$image" || podman build -t "$image" -f "$root/build/flatpak/Containerfile" "$root/build/flatpak"

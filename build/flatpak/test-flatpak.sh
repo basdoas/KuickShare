@@ -7,7 +7,7 @@
 # Usage: build/flatpak/test-flatpak.sh dist/KuickShare-x86_64.flatpak
 set -eu
 root=$(cd "$(dirname "$0")/../.." && pwd)
-image=localhost/kuickshare-flatpak:fedora44
+image=localhost/kuickshare-flatpak:fedora45
 
 if [ ! -e /run/.containerenv ]; then
     bundle=$(readlink -f "$1")

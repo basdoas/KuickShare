@@ -301,7 +301,10 @@ async fn connect_lan(
 async fn connect_ble(
     endpoint_id: [u8; 4],
     sender: &Sender<ChannelMessage>,
-    #[cfg_attr(not(all(feature = "experimental", target_os = "linux")), allow(unused_mut))]
+    #[cfg_attr(
+        not(all(feature = "experimental", target_os = "linux")),
+        allow(unused_mut)
+    )]
     mut cancel_rx: BusReceiver<ChannelMessage>,
     ctk: CancellationToken,
     si: SendInfo,
@@ -513,7 +516,13 @@ mod tests {
         while let Ok(message) = rx.try_recv() {
             states.push(state_of(message));
         }
-        assert!(states.contains(&Some(TransferState::Cancelled)), "{states:?}");
-        assert!(!states.contains(&Some(TransferState::Disconnected)), "{states:?}");
+        assert!(
+            states.contains(&Some(TransferState::Cancelled)),
+            "{states:?}"
+        );
+        assert!(
+            !states.contains(&Some(TransferState::Disconnected)),
+            "{states:?}"
+        );
     }
 }

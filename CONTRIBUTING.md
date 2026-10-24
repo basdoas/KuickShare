@@ -1,6 +1,6 @@
 # Contributing
 
-KuickShare targets KDE Plasma 6: the AppImage and the Flatpak any distribution, the tarball Fedora 44 and distributions with the same libraries. Issues and pull requests are welcome; for anything larger than a small fix, open an issue first to agree on the approach.
+KuickShare targets KDE Plasma 6: the AppImage and the Flatpak any distribution, the tarball Fedora 45 and distributions with the same libraries. Issues and pull requests are welcome; for anything larger than a small fix, open an issue first to agree on the approach.
 
 ## Repository layout
 
@@ -12,7 +12,7 @@ KuickShare targets KDE Plasma 6: the AppImage and the Flatpak any distribution, 
 | `tests/core/` | Rust integration tests; they start the daemon on a private D-Bus |
 | `tests/shell/` | Qt tests: transfer model, Dolphin menu entry, `Exec` quoting, Flatpak and AppImage launcher paths, first-launch integration |
 | `data/` | Files installed on the host: `.desktop`, metainfo, icons, notification definitions, Dolphin service menu |
-| `build/` | Build container (`build-env.sh`, `Containerfile`), AppImage (`build-appimage.sh`, `appimage/`: Arch image, hook, test), tarball with its installer (`build-host-payload.sh`, `build-tarball.sh`, `appimage/install.sh`, `test-tarball.sh`) and Flatpak (`flatpak/`: manifest, build, test and repository scripts) |
+| `build/` | Build container (`build-env.sh`, `Containerfile`), all checks (`check.sh`), AppImage (`build-appimage.sh`, `appimage/`: Arch image, hook, test), tarball with its installer (`build-host-payload.sh`, `build-tarball.sh`, `appimage/install.sh`, `test-tarball.sh`) and Flatpak (`flatpak/`: manifest, build, test and repository scripts) |
 | `po/` | Translation catalogs |
 | `docs/` | User and design documentation |
 | `dist/` | Generated, not in git: the AppImage and its `.zsync`, the tarball, the Flatpak bundle and repository, and `tmp/` (CMake builds, staging) |
@@ -51,19 +51,21 @@ The app also needs a few files from `data/` on the host:
 
 ## Checks
 
-CI runs these on every push and pull request, in a `fedora:44` container ([`ci.yml`](.github/workflows/ci.yml)). Run them before opening a pull request.
+One script runs every automated check, locally and in CI: [`build/check.sh`](build/check.sh). Run it before opening a pull request.
 
 ```sh
-cargo fmt --check
-cargo clippy --all-targets --all-features -- -D warnings
-cargo test --all-features                              # unit tests and tests/core; needs dbus-daemon
-cargo test -p rqs_lib                                  # the vendored library: not a workspace member, so not in the line above
-cmake -S src/shell -B dist/tmp/cmake-dev -G Ninja && cmake --build dist/tmp/cmake-dev
-ctest --test-dir dist/tmp/cmake-dev
-qmllint-qt6 -I /usr/lib64/qt6/qml src/shell/qml/*.qml
+build/build-env.sh build/check.sh
 ```
 
-Outside the build container, prefix the commands with `build/build-env.sh`; `dbus-daemon` is in the image.
+| Step | Command |
+|---|---|
+| Format | `cargo fmt --check`, also in `third_party/rqs_lib` |
+| Lint | `cargo clippy --locked --all-targets --all-features -- -D warnings` |
+| Rust tests | `cargo test --locked --all-features` (needs `dbus-daemon`), and `cargo test -p rqs_lib` for the vendored library, which is not a workspace member |
+| Shell | CMake build into `dist/tmp/cmake-dev`, `ctest`, `qmllint-qt6` |
+| Data | `xmllint` on the metainfo, `desktop-file-validate`, `msgfmt -c` on every catalog |
+
+CI ([`ci.yml`](.github/workflows/ci.yml)) runs the same script in the image built from [`build/Containerfile`](build/Containerfile) and published to `ghcr.io` by [`images.yml`](.github/workflows/images.yml); a pull request that changes a Containerfile is checked with the previous image until it is merged. A separate job runs `cargo deny check` ([`deny.toml`](deny.toml): advisories, licenses, sources). Dependabot proposes Cargo and action updates weekly.
 
 ### Hand tests with a phone (Wi-Fi upgrade and Bluetooth)
 

@@ -51,8 +51,7 @@ pub mod location_nearby_connections {
 }
 
 static CUSTOM_DOWNLOAD: Lazy<RwLock<Option<PathBuf>>> = Lazy::new(|| RwLock::new(None));
-static DEVICE_NAME: Lazy<RwLock<String>> =
-    Lazy::new(|| RwLock::new(sys_metrics::host::get_hostname().unwrap_or("Unknown device".into())));
+static DEVICE_NAME: Lazy<RwLock<String>> = Lazy::new(|| RwLock::new(utils::hostname()));
 
 // None (the default) disables bandwidth upgrades entirely.
 static WIFI_LINK: Lazy<RwLock<Option<Arc<dyn WifiLink>>>> = Lazy::new(|| RwLock::new(None));
@@ -106,12 +105,7 @@ pub struct RQS {
 
 impl Default for RQS {
     fn default() -> Self {
-        Self::new(
-            Visibility::Visible,
-            None,
-            None,
-            Some(sys_metrics::host::get_hostname().unwrap_or("Unknown device".into())),
-        )
+        Self::new(Visibility::Visible, None, None, Some(utils::hostname()))
     }
 }
 

@@ -22,7 +22,7 @@ body:
     attributes:
       label: System
       description: Fedora and Plasma versions, and the phone or device you were sharing with.
-      placeholder: "Fedora 44, Plasma 6.x, Pixel 7 (Android 16)"
+      placeholder: "Fedora 45, Plasma 6.x, Pixel 7 (Android 16)"
   - type: textarea
     id: logs
     attributes:

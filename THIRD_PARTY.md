@@ -23,7 +23,8 @@ KuickShare is GPL-3.0-or-later (see [LICENSE](LICENSE)). It builds on the projec
 | Four fixes:<br>- mDNS ignores the hotspot subnet<br>- a send reads the phone's cancel or disconnection while it writes<br>- a phone known to advertise no PSM is dialled over GATT at once<br>- a pending BLE connect is cancelled when a dial ends | `src/hdl/mdns.rs`, `src/hdl/mdns_discovery.rs`, `src/hdl/outbound.rs`, `src/utils.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/` |
 | `TransferMetadata::saved_paths`: where an inbound file is saved | `src/hdl/info.rs`, `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | Per-chunk logs lowered to `trace` | `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
-| Formatting only | `src/hdl/mdns_discovery.rs`, `src/hdl/blea.rs` (comment) |
+| `sys_metrics` (AGPL-3.0) replaced by reading `/proc/sys/kernel/hostname`; `get_if_addrs` replaced by `if-addrs` | `src/utils.rs`, `src/lib.rs`, `Cargo.toml` |
+| Formatting only | `src/hdl/mdns_discovery.rs`, `src/hdl/blea.rs` (comment), `src/hdl/outbound.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/gatt_dial.rs`, `src/manager.rs` |
 
 ## System software and bundled libraries
 
@@ -51,9 +52,6 @@ Icons are referenced by theme name and resolved from the system Breeze theme at 
 The tarball (the host-library package) contains only the two binaries `kuickshare` and `kuickshared` (see [`build/build-host-payload.sh`](build/build-host-payload.sh)). All crates below are statically linked into `kuickshared`.
 
 The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal (non-dev, non-build-only) dependencies reachable from `kuickshare-core`, and covers all target platforms, so a few entries may not be compiled on Linux. Licenses are the SPDX expressions declared by each crate.
-
-> [!WARNING]
-> `sys_metrics` (pulled in by `rqs_lib`) declares **AGPL-3.0**. It is compatible with the GPL-3.0-or-later of this project (GPLv3 section 13) but it is not permissive: keep it in mind when relicensing or redistributing.
 
 ### Direct dependencies
 
@@ -97,7 +95,6 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | bluer | 0.17.4 | BSD-2-Clause |
 | bumpalo | 3.20.3 | MIT OR Apache-2.0 |
 | bytes | 1.12.1 | MIT |
-| c_linked_list | 1.1.1 | MIT OR BSD-3-Clause |
 | cfg-if | 1.0.5 | MIT OR Apache-2.0 |
 | chacha20 | 0.9.1 | Apache-2.0 OR MIT |
 | chacha20poly1305 | 0.10.1 | Apache-2.0 OR MIT |
@@ -105,7 +102,6 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | concurrent-queue | 2.5.0 | Apache-2.0 OR MIT |
 | const-oid | 0.10.2 | Apache-2.0 OR MIT |
 | const-oid | 0.9.6 | Apache-2.0 OR MIT |
-| core-foundation-sys | 0.8.7 | MIT OR Apache-2.0 |
 | cpufeatures | 0.2.17 | MIT OR Apache-2.0 |
 | cpufeatures | 0.3.1 | MIT OR Apache-2.0 |
 | crossbeam-utils | 0.8.23 | MIT OR Apache-2.0 |
@@ -148,13 +144,10 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | futures-sink | 0.3.34 | MIT OR Apache-2.0 |
 | futures-task | 0.3.34 | MIT OR Apache-2.0 |
 | generic-array | 0.14.7 | MIT |
-| get_if_addrs | 0.5.3 | MIT OR BSD-3-Clause |
-| get_if_addrs-sys | 0.1.1 | MIT OR BSD-3-Clause |
 | getrandom | 0.2.17 | MIT OR Apache-2.0 |
 | getrandom | 0.3.4 | MIT OR Apache-2.0 |
 | getrandom | 0.4.3 | MIT OR Apache-2.0 |
 | ghash | 0.5.1 | Apache-2.0 OR MIT |
-| glob | 0.3.4 | MIT OR Apache-2.0 |
 | group | 0.13.0 | MIT/Apache-2.0 |
 | heck | 0.5.0 | MIT OR Apache-2.0 |
 | hkdf | 0.12.4 | MIT OR Apache-2.0 |
@@ -163,7 +156,6 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | ident_case | 1.0.1 | MIT/Apache-2.0 |
 | if-addrs | 0.10.2 | MIT OR BSD-3-Clause |
 | inout | 0.1.4 | MIT OR Apache-2.0 |
-| io-kit-sys | 0.3.0 | MIT / Apache-2.0 |
 | itertools | 0.14.0 | MIT OR Apache-2.0 |
 | itoa | 1.0.18 | MIT OR Apache-2.0 |
 | js-sys | 0.3.106 | MIT OR Apache-2.0 |
@@ -176,8 +168,6 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | lock_api | 0.4.14 | MIT OR Apache-2.0 |
 | log | 0.4.34 | MIT OR Apache-2.0 |
 | macaddr | 1.0.1 | Apache-2.0 OR MIT |
-| mach | 0.3.2 | BSD-2-Clause |
-| mach2 | 0.4.3 | BSD-2-Clause OR MIT OR Apache-2.0 |
 | matchers | 0.2.0 | MIT |
 | mdns-sd | 0.10.4 | Apache-2.0 OR MIT |
 | memchr | 2.8.3 | Unlicense OR MIT |
@@ -244,7 +234,6 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | syn | 2.0.119 | MIT OR Apache-2.0 |
 | syn | 3.0.9 | MIT OR Apache-2.0 |
 | synstructure | 0.13.2 | MIT |
-| sys_metrics | 0.2.7 | AGPL-3.0 |
 | tempfile | 3.27.0 | MIT OR Apache-2.0 |
 | thiserror | 2.0.21 | MIT OR Apache-2.0 |
 | thiserror-impl | 2.0.21 | MIT OR Apache-2.0 |
@@ -269,8 +258,6 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | wasm-bindgen-macro | 0.2.129 | MIT OR Apache-2.0 |
 | wasm-bindgen-macro-support | 0.2.129 | MIT OR Apache-2.0 |
 | wasm-bindgen-shared | 0.2.129 | MIT OR Apache-2.0 |
-| winapi | 0.2.8 | MIT |
-| winapi | 0.3.9 | MIT/Apache-2.0 |
 | winapi-i686-pc-windows-gnu | 0.4.0 | MIT/Apache-2.0 |
 | winapi-x86_64-pc-windows-gnu | 0.4.0 | MIT/Apache-2.0 |
 | windows-link | 0.2.1 | MIT OR Apache-2.0 |

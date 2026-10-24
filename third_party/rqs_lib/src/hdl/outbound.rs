@@ -48,8 +48,7 @@ use crate::sharing_nearby::{
 use crate::upgrade::{self, Reply, UpgradeEvent, UpgradeState};
 use crate::utils::{
     DeviceType, RemoteDeviceInfo, create_text_preview, decode_point, encode_point,
-    gen_ecdsa_keypair, gen_random, hkdf_extract_expand, read_frame,
-    to_four_digit_string,
+    gen_ecdsa_keypair, gen_random, hkdf_extract_expand, read_frame, to_four_digit_string,
 };
 use crate::{DEVICE_NAME, location_nearby_connections, sharing_nearby};
 
@@ -1602,7 +1601,11 @@ impl OutboundRequest {
                 .await;
                 // A frame cut in the middle must be completed before anything else goes out;
                 // nothing sent yet (or all of it) is a clean boundary.
-                let unsent = if written == 0 { &[][..] } else { &data[written..] };
+                let unsent = if written == 0 {
+                    &[][..]
+                } else {
+                    &data[written..]
+                };
                 self.cancel_peer(unsent).await;
                 Ok(false)
             }
@@ -2194,7 +2197,10 @@ mod tests {
             disconnection.v1.unwrap().r#type(),
             location_nearby_connections::v1_frame::FrameType::Disconnection
         );
-        assert!(read_plain_frame(&mut peer).await.is_none(), "no FIN after the cancel");
+        assert!(
+            read_plain_frame(&mut peer).await.is_none(),
+            "no FIN after the cancel"
+        );
         drop(peer);
         let (sent, state, user_cancelled) = tokio::time::timeout(Duration::from_secs(5), send)
             .await
@@ -2228,7 +2234,10 @@ mod tests {
             disconnection.v1.unwrap().r#type(),
             location_nearby_connections::v1_frame::FrameType::Disconnection
         );
-        assert!(read_plain_frame(&mut peer).await.is_none(), "no FIN after the cancel");
+        assert!(
+            read_plain_frame(&mut peer).await.is_none(),
+            "no FIN after the cancel"
+        );
         drop(peer);
         let err = tokio::time::timeout(Duration::from_secs(5), handle)
             .await
@@ -2495,12 +2504,18 @@ mod tests {
                 ..Default::default()
             }),
         };
-        assert!(OutboundRequest::is_droppable_frame(&frame(FrameType::KeepAlive)));
-        assert!(OutboundRequest::is_droppable_frame(&frame(FrameType::PayloadTransfer)));
+        assert!(OutboundRequest::is_droppable_frame(&frame(
+            FrameType::KeepAlive
+        )));
+        assert!(OutboundRequest::is_droppable_frame(&frame(
+            FrameType::PayloadTransfer
+        )));
         assert!(!OutboundRequest::is_droppable_frame(&frame(
             FrameType::BandwidthUpgradeNegotiation
         )));
-        assert!(!OutboundRequest::is_droppable_frame(&OfflineFrame::default()));
+        assert!(!OutboundRequest::is_droppable_frame(
+            &OfflineFrame::default()
+        ));
     }
 
     /// An oversized frame from the peer is reported as invalid, not as a lost peer.
@@ -2539,7 +2554,10 @@ mod tests {
             .expect("the closed connection was not noticed during a blocked write")
             .unwrap()
             .unwrap_err();
-        assert!(err.to_string().contains("lost the peer while sending"), "{err}");
+        assert!(
+            err.to_string().contains("lost the peer while sending"),
+            "{err}"
+        );
     }
 
     /// In an encrypted session every frame read while sending consumes one client sequence

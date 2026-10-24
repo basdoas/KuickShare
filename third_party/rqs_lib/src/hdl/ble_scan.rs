@@ -1137,7 +1137,10 @@ mod tests {
         );
         assert_eq!(target_found(ScanEvent::Gone(*b"ABCD"), t, true), None);
         let no_psm = ScanResult { psm: None, ..hit };
-        assert_eq!(target_found(ScanEvent::Found(no_psm.clone()), t, false), None);
+        assert_eq!(
+            target_found(ScanEvent::Found(no_psm.clone()), t, false),
+            None
+        );
         assert_eq!(
             target_found(ScanEvent::Found(no_psm.clone()), t, true),
             Some(no_psm)
@@ -1203,7 +1206,10 @@ mod tests {
     #[test]
     fn a_phone_with_a_new_id_is_found_by_its_name() {
         let samsung = named(b"4IX7", "Galaxy A55 5G", DeviceType::Phone);
-        let seen = sightings(&[named(b"HNBG", "Pixel 7", DeviceType::Phone), samsung.clone()]);
+        let seen = sightings(&[
+            named(b"HNBG", "Pixel 7", DeviceType::Phone),
+            samsung.clone(),
+        ]);
         assert_eq!(
             renamed_sighting(&seen, *b"ARWA", "Galaxy A55 5G", Some(&DeviceType::Phone)),
             Renamed::Found(samsung.clone())
@@ -1230,7 +1236,10 @@ mod tests {
         );
         // No name to go by, or no phone with it.
         assert_eq!(renamed_sighting(&seen, *b"ARWA", "", None), Renamed::No);
-        assert_eq!(renamed_sighting(&seen, *b"ARWA", "Pixel 7", None), Renamed::No);
+        assert_eq!(
+            renamed_sighting(&seen, *b"ARWA", "Pixel 7", None),
+            Renamed::No
+        );
         // The wanted id itself never counts as another phone.
         assert_eq!(
             renamed_sighting(&seen, *b"4IX7", "Galaxy A55 5G", None),
@@ -1254,7 +1263,9 @@ mod tests {
         assert!(e.to_string().contains("Quick Share open"), "{e}");
         let one = sightings(&[named(b"4IX7", "Galaxy A55 5G", DeviceType::Phone)]);
         assert_eq!(
-            not_seen(&one, t, "Galaxy A55 5G", None, secs).unwrap().endpoint_id,
+            not_seen(&one, t, "Galaxy A55 5G", None, secs)
+                .unwrap()
+                .endpoint_id,
             *b"4IX7"
         );
     }
@@ -1274,6 +1285,10 @@ mod tests {
     fn an_ended_discovery_is_recognised_through_anyhow() {
         let e: anyhow::Error = DiscoveryEnded.into();
         assert!(e.downcast_ref::<DiscoveryEnded>().is_some());
-        assert!(anyhow::anyhow!("other").downcast_ref::<DiscoveryEnded>().is_none());
+        assert!(
+            anyhow::anyhow!("other")
+                .downcast_ref::<DiscoveryEnded>()
+                .is_none()
+        );
     }
 }

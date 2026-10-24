@@ -269,7 +269,10 @@ async fn rediscover(adapter: &Adapter, address: Address) {
     let found = timeout(REDISCOVER_TIMEOUT, listed).await.ok().flatten();
     // The stream is dropped: let BlueZ stop the discovery before the next connect.
     wait_discovery_stopped(adapter).await;
-    debug!("{INNER_NAME}: device {address} listed again: {}", found.is_some());
+    debug!(
+        "{INNER_NAME}: device {address} listed again: {}",
+        found.is_some()
+    );
 }
 
 /// Best effort: a link that cannot be closed is BlueZ's to clean up.

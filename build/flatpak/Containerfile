@@ -1,4 +1,4 @@
-FROM registry.fedoraproject.org/fedora:44
+FROM registry.fedoraproject.org/fedora:45
 
 RUN dnf install -y --setopt=install_weak_deps=False \
         flatpak flatpak-builder git python3 python3-pip python3-aiohttp \
@@ -7,3 +7,6 @@ RUN dnf install -y --setopt=install_weak_deps=False \
     && dnf clean all
 
 RUN pip install --no-cache-dir tomlkit
+
+# Links the ghcr.io package to the repository, so the workflows can pull it with GITHUB_TOKEN.
+LABEL org.opencontainers.image.source="https://github.com/the-beper/KuickShare"

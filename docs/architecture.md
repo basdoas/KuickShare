@@ -325,7 +325,7 @@ The "Open link" action appears only for received text that is a single `http://`
 
 ## Testing
 
-Everything below runs in CI (`.github/workflows/ci.yml`) in a `fedora:44` container, with `QT_QPA_PLATFORM=offscreen`, together with `cargo fmt --check`, Clippy with `-D warnings` and `qmllint`.
+Everything below runs in CI (`.github/workflows/ci.yml`) through `build/check.sh` in the Fedora 45 build image, with `QT_QPA_PLATFORM=offscreen`, together with `cargo fmt --check`, Clippy with `-D warnings` and `qmllint` (see [CONTRIBUTING.md](../CONTRIBUTING.md#checks)).
 
 | Layer | Where | Covers |
 | --- | --- | --- |
@@ -405,7 +405,7 @@ The manifest is [`build/flatpak/io.github.the_beper.KuickShare.yml`](../build/fl
 
 ```mermaid
 flowchart LR
-    A["build/flatpak/build-flatpak.sh"] -->|"runs in"| B["podman image, Fedora 44 (build/flatpak/Containerfile)"]
+    A["build/flatpak/build-flatpak.sh"] -->|"runs in"| B["podman image, Fedora 45 (build/flatpak/Containerfile)"]
     B --> C["flatpak-builder: KDE 6.11 SDK, rust-stable"]
     C --> D["OSTree repo + dist/KuickShare-x86_64.flatpak"]
     D -->|"release.yml: sign, publish-repo.sh"| E["GitHub Pages: repo/, .flatpakrepo, .flatpakref"]

@@ -27,25 +27,23 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
     container:
-      image: fedora:44
-    env:
-      QT_QPA_PLATFORM: offscreen
+      image: ghcr.io/the-beper/kuickshare-build:fedora45
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - name: Install system packages
-        run: |
-          dnf install -y --setopt=install_weak_deps=False \
-            gcc gcc-c++ make cmake ninja-build pkgconf-pkg-config git \
-            dbus-devel dbus-daemon protobuf-compiler squashfs-tools curl libxml2 desktop-file-utils \
-            qt6-qtbase-devel qt6-qtdeclarative-devel qt6-qtsvg-devel \
-            extra-cmake-modules \
-            kf6-kirigami-devel kf6-kstatusnotifieritem-devel kf6-knotifications-devel \
-            kf6-ki18n-devel kf6-kconfig-devel kf6-kcoreaddons-devel kf6-kcrash-devel kf6-kdbusaddons-devel \
-            kf6-kio-devel kf6-kiconthemes-devel kf6-kirigami-addons
-
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Rust (stable)
@@ -53,39 +51,14 @@ jobs:
           curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal -c rustfmt,clippy
           echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
 
-      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            target
-          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
-          restore-keys: cargo-${{ runner.os }}-
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
 
-      - name: Format
-        run: cargo fmt --check
-      - name: Clippy
-        run: cargo clippy --all-targets --all-features -- -D warnings
-      - name: Rust tests
-        run: cargo test --all-features
-
-      - name: Build shell
-        run: |
-          cmake -S src/shell -B dist/tmp/cmake-dev -G Ninja
-          cmake --build dist/tmp/cmake-dev
-      - name: Shell tests
-        run: ctest --test-dir dist/tmp/cmake-dev --output-on-failure
-
-      - name: Metainfo and desktop file
-        run: |
-          xmllint --noout data/*.metainfo.xml
-          desktop-file-validate data/io.github.the_beper.KuickShare.desktop
-
-      - name: qmllint
-        run: qmllint-qt6 -I /usr/lib64/qt6/qml src/shell/qml/*.qml
+      - name: Checks
+        run: build/check.sh
 
   appimage:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -104,18 +77,17 @@ jobs:
 
   flatpak:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      packages: read
     container:
-      image: fedora:44
+      image: ghcr.io/the-beper/kuickshare-flatpak:fedora45
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
       options: --privileged
     steps:
-      - name: Install system packages
-        run: |
-          dnf install -y --setopt=install_weak_deps=False \
-            flatpak flatpak-builder git python3 python3-pip python3-aiohttp \
-            dbus-daemon appstream ostree gnupg2 xz curl \
-            xdg-desktop-portal fuse3 python3-gobject-base
-          pip install --no-cache-dir tomlkit
-
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build Flatpak
@@ -127,3 +99,11 @@ jobs:
         run: |
           mkdir -p -m 700 /run/user/0
           XDG_RUNTIME_DIR=/run/user/0 dbus-run-session -- build/flatpak/test-flatpak.sh dist/KuickShare-x86_64.flatpak
+
+  deny:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: EmbarkStudios/cargo-deny-action@3c6349835b2b7b196a839186cb8b78e02f7b5f25 # v2.1.1

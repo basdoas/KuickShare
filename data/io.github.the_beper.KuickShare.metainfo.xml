@@ -40,6 +40,18 @@
     <control>keyboard</control>
   </recommends>
   <releases>
+    <release version="1.3.0" date="2026-10-25">
+      <description>
+        <p>Search and filters on the Transfers page, and cleaner messages.</p>
+        <ul>
+          <li>The Transfers page has a search field (Ctrl+F) that matches the device name, received text and file names, and menus to show only received or sent transfers, and only transfers in progress, completed or not completed. Reset filters brings the whole list back.</li>
+          <li>The message boxes show their icon centered, and their texts no longer end with a period.</li>
+          <li>The default device name is read straight from the system hostname and falls back to "Unknown device" when it is empty.</li>
+          <li>KuickShare no longer uses the AGPL-3.0 licensed sys_metrics library, nor the unmaintained gcc and mach crates.</li>
+          <li>Translations are updated; the Dutch and Turkish ones have not been reviewed by a native speaker.</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.2.2" date="2026-10-24"/>
     <release version="1.2.1" date="2026-10-23"/>
     <release version="1.2.0" date="2026-10-23"/>

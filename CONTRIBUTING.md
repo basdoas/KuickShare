@@ -151,7 +151,7 @@ The maintainer's `.claude/` setup has a `translator` agent that fills the new en
 
 ## Releases
 
-1. Set the new version in `Cargo.toml`, `src/shell/CMakeLists.txt` and the `<releases>` block of `data/io.github.the_beper.KuickShare.metainfo.xml`.
+1. Set the new version in `Cargo.toml`, `src/shell/CMakeLists.txt` and the `<releases>` block of `data/io.github.the_beper.KuickShare.metainfo.xml`, where the release notes go in the `<description>` of the new `<release>`.
 2. Tag it `vX.Y.Z`, matching the version, and push the tag.
 
 The tag triggers [`release.yml`](.github/workflows/release.yml): it builds the AppImage and the tarball, checks that their version matches the tag, tests them and publishes them with the `.zsync` file and a `SHA256SUMS` file. It then builds the Flatpak, attaches the bundle and updates the repository on GitHub Pages.

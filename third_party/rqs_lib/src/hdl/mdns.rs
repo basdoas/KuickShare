@@ -158,7 +158,7 @@ impl MDnsServer {
         let mut si = ServiceInfo::new(
             "_FC9F5ED42C8A._tcp.local.",
             &name,
-            &name, // Needs to be ASCII?
+            &format!("{name}.local."), // mdns-sd rejects a host name without the suffix
             "",
             service_port,
             &properties[..],
@@ -169,5 +169,19 @@ impl MDnsServer {
         si.set_requires_probe(false);
 
         Ok(si)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn service_is_accepted_by_register() {
+        let si = MDnsServer::build_service([1, 2, 3, 4], 4000, DeviceType::Laptop).unwrap();
+        assert!(si.get_hostname().ends_with(".local."));
+        let daemon = ServiceDaemon::new().unwrap();
+        daemon.register(si).unwrap();
+        let _ = daemon.shutdown();
     }
 }

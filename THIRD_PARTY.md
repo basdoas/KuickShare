@@ -24,6 +24,7 @@ KuickShare is GPL-3.0-or-later (see [LICENSE](LICENSE)). It builds on the projec
 | `TransferMetadata::saved_paths`: where an inbound file is saved | `src/hdl/info.rs`, `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | Per-chunk logs lowered to `trace` | `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | `sys_metrics` (AGPL-3.0) replaced by reading `/proc/sys/kernel/hostname`; `get_if_addrs` replaced by `if-addrs` | `src/utils.rs`, `src/lib.rs`, `Cargo.toml` |
+| `mdns-sd` from crates.io (0.21), and `if-addrs` 0.15 to match it, instead of the `unsolicited` branch of a fork: the periodic announcement is a second `register` call, the advertised addresses are IPv4 only through `disable_interface(IfKind::IPv6)` on the advertising daemon, and probing is off (`set_requires_probe(false)`) | `Cargo.toml`, `src/hdl/mdns.rs` |
 | `license = "GPL-3.0-only"` added to the manifest (upstream declares none, cargo-deny warned) | `Cargo.toml` |
 | Formatting only (and an unused test import) | `src/hdl/mdns_discovery.rs`, `src/hdl/blea.rs` (comment), `src/hdl/outbound.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/gatt_dial.rs`, `src/manager.rs` |
 
@@ -170,7 +171,7 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | log | 0.4.34 | MIT OR Apache-2.0 |
 | macaddr | 1.0.1 | Apache-2.0 OR MIT |
 | matchers | 0.2.0 | MIT |
-| mdns-sd | 0.10.4 | Apache-2.0 OR MIT |
+| mdns-sd | 0.21.6 | Apache-2.0 OR MIT |
 | memchr | 2.8.3 | Unlicense OR MIT |
 | memoffset | 0.9.1 | MIT |
 | mime | 0.3.17 | MIT OR Apache-2.0 |

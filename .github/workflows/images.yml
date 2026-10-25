@@ -8,9 +8,10 @@ on:
     paths:
       - build/Containerfile
       - build/flatpak/Containerfile
+      - build/appimage/Containerfile.arch
       - .github/workflows/images.yml
   schedule:
-    - cron: "17 4 * * 1" # weekly, to pick up Fedora updates
+    - cron: "17 4 * * 1" # weekly, to pick up Fedora and Arch updates
   workflow_dispatch:
 
 permissions:
@@ -29,9 +30,15 @@ jobs:
           - image: kuickshare-build
             file: build/Containerfile
             context: build
+            tag: fedora45
           - image: kuickshare-flatpak
             file: build/flatpak/Containerfile
             context: build/flatpak
+            tag: fedora45
+          - image: kuickshare-appimage
+            file: build/appimage/Containerfile.arch
+            context: build/appimage
+            tag: arch
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
@@ -47,4 +54,4 @@ jobs:
           file: ${{ matrix.file }}
           pull: true
           push: true
-          tags: ghcr.io/the-beper/${{ matrix.image }}:fedora45
+          tags: ghcr.io/the-beper/${{ matrix.image }}:${{ matrix.tag }}

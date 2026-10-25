@@ -1,25 +1,28 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.ki18n
 
 // The keyboard shortcuts, in an overlay: each key in a small box, the action next to it.
 Kirigami.Dialog {
     id: dialog
 
     readonly property var rows: [
-        ["Ctrl+1", i18n("Send")],
-        ["Ctrl+2", i18n("Transfers")],
-        ["Ctrl+F", i18n("Search transfers")],
-        ["Ctrl+,", i18n("Preferences")],
-        ["Ctrl+H", i18n("Help")],
-        ["F1", i18n("Help")],
-        ["Ctrl+?", i18n("Show the shortcuts")],
-        ["Ctrl+O", i18n("Choose files to send")],
-        ["Ctrl+V", i18n("Paste files, an image or text from the clipboard")],
-        ["Ctrl+L", i18n("Clear files and text")],
-        ["Ctrl+W", i18n("Close the window")],
-        ["Ctrl+Q", i18n("Quit KuickShare")]
+        ["Ctrl+1", KI18n.i18n("Send")],
+        ["Ctrl+2", KI18n.i18n("Transfers")],
+        ["Ctrl+F", KI18n.i18n("Search transfers")],
+        ["Ctrl+,", KI18n.i18n("Preferences")],
+        ["Ctrl+H", KI18n.i18n("Help")],
+        ["F1", KI18n.i18n("Help")],
+        ["Ctrl+?", KI18n.i18n("Show the shortcuts")],
+        ["Ctrl+O", KI18n.i18n("Choose files to send")],
+        ["Ctrl+V", KI18n.i18n("Paste files, an image or text from the clipboard")],
+        ["Ctrl+L", KI18n.i18n("Clear files and text")],
+        ["Ctrl+W", KI18n.i18n("Close the window")],
+        ["Ctrl+Q", KI18n.i18n("Quit KuickShare")]
     ]
 
     function keyParts(keys) {
@@ -38,7 +41,7 @@ Kirigami.Dialog {
     readonly property real contentMargin: Kirigami.Units.largeSpacing * 2
     readonly property real headerSize: Kirigami.Units.iconSizes.medium
 
-    title: i18n("Shortcuts")
+    title: KI18n.i18n("Shortcuts")
     standardButtons: Kirigami.Dialog.NoButton
     footer: null
     preferredWidth: Kirigami.Units.gridUnit * 24
@@ -73,7 +76,7 @@ Kirigami.Dialog {
                 icon.width: Kirigami.Units.iconSizes.smallMedium
                 icon.height: Kirigami.Units.iconSizes.smallMedium
                 display: QQC2.AbstractButton.IconOnly
-                text: i18n("Close")
+                text: KI18n.i18n("Close")
                 Layout.preferredWidth: dialog.headerSize
                 Layout.preferredHeight: dialog.headerSize
                 onClicked: dialog.close()

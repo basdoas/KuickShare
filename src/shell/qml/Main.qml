@@ -6,6 +6,7 @@ import QtQuick.Controls as QQC2
 import QtQuick.Templates as T
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.ki18n
 
 Kirigami.ApplicationWindow {
     id: root
@@ -22,7 +23,7 @@ Kirigami.ApplicationWindow {
     // A failed send keeps the files and the text so that it can be tried again.
     property string pendingSendId: ""
 
-    title: i18n("KuickShare")
+    title: KI18n.i18n("KuickShare")
     // Compact, fixed size (so it cannot be maximized or resized): the pages scroll when needed.
     readonly property real fixedWidth: Kirigami.Units.gridUnit * 26
     readonly property real fixedHeight: Math.min(Kirigami.Units.gridUnit * 37, Screen.desktopAvailableHeight * 0.9)
@@ -53,7 +54,7 @@ Kirigami.ApplicationWindow {
             }
             root.pendingSendId = "";
             root.outgoingFiles = [];
-            root.pageStack.currentItem?.clearText?.();
+            (root.pageStack.currentItem as SendPage)?.clearText();
         }
     }
 
@@ -82,17 +83,17 @@ Kirigami.ApplicationWindow {
 
     function openFiles() {
         show("send");
-        Qt.callLater(() => root.pageStack.currentItem?.openFileDialog?.());
+        Qt.callLater(() => (root.pageStack.currentItem as SendPage)?.openFileDialog());
     }
     function pasteClipboard() {
         show("send");
-        Qt.callLater(() => root.pageStack.currentItem?.pasteFromClipboard?.());
+        Qt.callLater(() => (root.pageStack.currentItem as SendPage)?.pasteFromClipboard());
     }
     // Shows the details of a transfer (the "View" action of a notification).
     function showTransfer(id) {
         startPage = "transfers";
         show("transfers");
-        Qt.callLater(() => root.pageStack.currentItem?.showDetailsFor?.(id));
+        Qt.callLater(() => (root.pageStack.currentItem as TransfersPage)?.showDetailsFor(id));
     }
     function showSettings() {
         show("settings");
@@ -109,8 +110,8 @@ Kirigami.ApplicationWindow {
 
     Kirigami.PromptDialog {
         id: quitDialog
-        title: i18n("Quit KuickShare?")
-        subtitle: i18n("A transfer is in progress. Quitting stops it")
+        title: KI18n.i18n("Quit KuickShare?")
+        subtitle: KI18n.i18n("A transfer is in progress. Quitting stops it")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: Qt.quit()
     }
@@ -158,16 +159,16 @@ Kirigami.ApplicationWindow {
         function onTransferEnded(id, state) {
             switch (state) {
             case "Finished":
-                toasts.show(Kirigami.MessageType.Positive, i18n("Transfer completed"), 4000);
+                toasts.show(Kirigami.MessageType.Positive, KI18n.i18n("Transfer completed"), 4000);
                 break;
             case "Disconnected":
-                toasts.show(Kirigami.MessageType.Error, i18n("The transfer failed"), 10000);
+                toasts.show(Kirigami.MessageType.Error, KI18n.i18n("The transfer failed"), 10000);
                 break;
             case "Rejected":
-                toasts.show(Kirigami.MessageType.Information, i18n("The transfer was declined"), 6000);
+                toasts.show(Kirigami.MessageType.Information, KI18n.i18n("The transfer was declined"), 6000);
                 break;
             default:
-                toasts.show(Kirigami.MessageType.Information, i18n("The transfer was cancelled"), 6000);
+                toasts.show(Kirigami.MessageType.Information, KI18n.i18n("The transfer was cancelled"), 6000);
             }
         }
     }
@@ -228,14 +229,14 @@ Kirigami.ApplicationWindow {
 
             actions: [
                 Kirigami.Action {
-                    text: i18n("Send")
+                    text: KI18n.i18n("Send")
                     icon.name: "document-send"
                     checked: root.currentPage === "send"
                     shortcut: "Ctrl+1"
                     onTriggered: root.show("send")
                 },
                 Kirigami.Action {
-                    text: i18n("Transfers")
+                    text: KI18n.i18n("Transfers")
                     icon.name: "folder-sync"
                     checked: root.currentPage === "transfers"
                     shortcut: "Ctrl+2"
@@ -253,7 +254,7 @@ Kirigami.ApplicationWindow {
         QQC2.ToolButton {
             id: more
 
-            text: i18n("More")
+            text: KI18n.i18n("More")
             icon.name: "open-menu-symbolic"
             // Only the icon; the text is for screen readers.
             display: QQC2.AbstractButton.IconOnly
@@ -269,35 +270,35 @@ Kirigami.ApplicationWindow {
 
     Kirigami.Action {
         id: settingsAction
-        text: i18n("Preferences")
+        text: KI18n.i18n("Preferences")
         icon.name: "configure"
         shortcut: "Ctrl+,"
         onTriggered: root.show("settings")
     }
     Kirigami.Action {
         id: shortcutsAction
-        text: i18n("Shortcuts")
+        text: KI18n.i18n("Shortcuts")
         icon.name: "input-keyboard-symbolic"
         shortcut: "Ctrl+?"
         onTriggered: shortcutsDialog.open()
     }
     Kirigami.Action {
         id: quitAction
-        text: i18n("Quit")
+        text: KI18n.i18n("Quit")
         icon.name: "application-exit"
         shortcut: StandardKey.Quit
         onTriggered: root.requestQuit()
     }
     Kirigami.Action {
         id: helpAction
-        text: i18n("Help")
+        text: KI18n.i18n("Help")
         icon.name: "help-contents"
         shortcut: "Ctrl+H"
         onTriggered: root.show("help")
     }
     Kirigami.Action {
         id: aboutAction
-        text: i18n("About")
+        text: KI18n.i18n("About")
         icon.name: "help-about-symbolic"
         onTriggered: aboutDialog.open()
     }
@@ -388,7 +389,7 @@ Kirigami.ApplicationWindow {
         onActivated: {
             root.show("send");
             // The page may have just been created: ask it once it exists.
-            Qt.callLater(() => root.pageStack.currentItem?.openFileDialog?.());
+            Qt.callLater(() => (root.pageStack.currentItem as SendPage)?.openFileDialog());
         }
     }
     // On the Send page, pasting anywhere (outside the text box, which has its own) adds what is on the clipboard.
@@ -401,7 +402,7 @@ Kirigami.ApplicationWindow {
         sequence: "Ctrl+L"
         onActivated: {
             root.outgoingFiles = [];
-            root.pageStack.currentItem?.clearText?.();
+            (root.pageStack.currentItem as SendPage)?.clearText();
         }
     }
     Shortcut {
@@ -425,10 +426,10 @@ Kirigami.ApplicationWindow {
         }
         visible: !root.core.connected && !root.core.serviceStarting
         type: Kirigami.MessageType.Error
-        text: i18n("The sharing service is not running. Nothing can be sent or received until it is started")
+        text: KI18n.i18n("The sharing service is not running. Nothing can be sent or received until it is started")
         actions: [
             Kirigami.Action {
-                text: i18n("Start service")
+                text: KI18n.i18n("Start service")
                 icon.name: "media-playback-start"
                 onTriggered: root.core.startService()
             }

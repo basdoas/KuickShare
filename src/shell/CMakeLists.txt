@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(kuickshare VERSION 1.3.0 LANGUAGES CXX)
+project(kuickshare VERSION 1.3.1 LANGUAGES CXX)
 add_compile_definitions(KUICKSHARE_VERSION="${PROJECT_VERSION}")
 
 find_package(ECM REQUIRED NO_MODULE)
@@ -49,6 +49,9 @@ qt_add_resources(kuickshare integration
     PREFIX /data
     BASE ${CMAKE_CURRENT_SOURCE_DIR}/../../data
     FILES ${INTEGRATION_FILES})
+
+# QML files in subdirectories need a qmldir each: not the case here, so use the new behavior (silences QTP0004).
+qt_policy(SET QTP0004 NEW)
 
 qt_add_qml_module(kuickshare
     URI io.github.the_beper.KuickShare

@@ -1,9 +1,12 @@
+pragma ComponentBehavior: Bound
+
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Window
 import org.kde.kirigami as Kirigami
+import org.kde.ki18n
 
 Kirigami.ScrollablePage {
     id: page
@@ -33,7 +36,7 @@ Kirigami.ScrollablePage {
     property bool sendAsText: false
     onSingleLinkChanged: sendAsText = false
 
-    title: i18n("Send")
+    title: KI18n.i18n("Send")
     // Same padding on every page: cards float with rounded corners instead of touching the window edges.
     topPadding: Kirigami.Units.largeSpacing
     leftPadding: Kirigami.Units.largeSpacing
@@ -133,7 +136,7 @@ Kirigami.ScrollablePage {
             QQC2.ToolButton {
                 icon.name: "edit-delete-remove"
                 display: QQC2.AbstractButton.IconOnly
-                text: i18n("Remove")
+                text: KI18n.i18n("Remove")
                 onClicked: page.fileRemoved(row.modelData.path)
             }
         }
@@ -141,7 +144,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.Dialog {
         id: allFilesDialog
-        title: i18n("Files to send")
+        title: KI18n.i18n("Files to send")
         standardButtons: Kirigami.Dialog.NoButton
         footer: null // no button bar: the close button of the header is enough
         preferredWidth: Kirigami.Units.gridUnit * 22
@@ -181,7 +184,7 @@ Kirigami.ScrollablePage {
 
     FileDialog {
         id: fileDialog
-        title: i18n("Choose files to send")
+        title: KI18n.i18n("Choose files to send")
         fileMode: FileDialog.OpenFiles
         onAccepted: page.filesAdded(selectedFiles)
     }
@@ -215,12 +218,12 @@ Kirigami.ScrollablePage {
                 Kirigami.Heading {
                     level: 3
                     color: status.starting || status.hidden || status.dnd ? Kirigami.Theme.textColor : Kirigami.Theme.highlightColor
-                    text: status.starting ? i18n("Starting…") : status.hidden ? i18n("Hidden") : status.dnd ? i18n("Do Not Disturb") : i18n("Ready")
+                    text: status.starting ? KI18n.i18n("Starting…") : status.hidden ? KI18n.i18n("Hidden") : status.dnd ? KI18n.i18n("Do Not Disturb") : KI18n.i18n("Ready")
                 }
                 QQC2.Label {
                     visible: text.length > 0
                     opacity: 0.7
-                    text: status.starting ? "" : status.hidden ? i18n("Turn on visibility in Preferences to receive files") : status.dnd ? i18n("Hidden until Do Not Disturb ends") : i18n("Visible as \"%1\"", page.core.deviceName)
+                    text: status.starting ? "" : status.hidden ? KI18n.i18n("Turn on visibility in Preferences to receive files") : status.dnd ? KI18n.i18n("Hidden until Do Not Disturb ends") : KI18n.i18n("Visible as \"%1\"", page.core.deviceName)
                 }
             }
         }
@@ -254,19 +257,19 @@ Kirigami.ScrollablePage {
                 Kirigami.Heading {
                     visible: page.files.length === 0
                     level: 2
-                    text: page.dragging ? i18n("Drop to share") : i18n("Drop files here")
+                    text: page.dragging ? KI18n.i18n("Drop to share") : KI18n.i18n("Drop files here")
                     Layout.alignment: Qt.AlignHCenter
                 }
                 QQC2.Label {
                     visible: page.files.length === 0
-                    text: i18n("or click to choose them")
+                    text: KI18n.i18n("or click to choose them")
                     opacity: 0.7
                     Layout.alignment: Qt.AlignHCenter
                 }
                 QQC2.Button {
                     visible: page.files.length === 0
                     icon.name: "edit-paste"
-                    text: i18n("Paste from clipboard")
+                    text: KI18n.i18n("Paste from clipboard")
                     enabled: page.core.clipboardHasFiles
                     Layout.alignment: Qt.AlignHCenter
                     Layout.bottomMargin: Kirigami.Units.largeSpacing
@@ -281,7 +284,7 @@ Kirigami.ScrollablePage {
                         Layout.fillWidth: true
                         Kirigami.Heading {
                             level: 3
-                            text: i18np("%1 file", "%1 files", page.files.length)
+                            text: KI18n.i18np("%1 file", "%1 files", page.files.length)
                         }
                         QQC2.Label {
                             text: page.core.formatSize(page.totalBytes)
@@ -290,12 +293,12 @@ Kirigami.ScrollablePage {
                     }
                     QQC2.Button {
                         icon.name: "list-add"
-                        text: i18n("Add")
+                        text: KI18n.i18n("Add")
                         onClicked: fileDialog.open()
                     }
                     QQC2.Button {
                         icon.name: "edit-clear-all"
-                        text: i18n("Clear")
+                        text: KI18n.i18n("Clear")
                         onClicked: page.filesCleared()
                     }
                 }
@@ -314,7 +317,7 @@ Kirigami.ScrollablePage {
                     visible: page.files.length > page.maxListed
                     flat: true
                     icon.name: "view-list-details"
-                    text: i18n("Show all %1 files", page.files.length)
+                    text: KI18n.i18n("Show all %1 files", page.files.length)
                     Layout.alignment: Qt.AlignHCenter
                     onClicked: allFilesDialog.open()
                 }
@@ -338,7 +341,7 @@ Kirigami.ScrollablePage {
                     }
                     Kirigami.Heading {
                         level: 4
-                        text: i18n("Text or link")
+                        text: KI18n.i18n("Text or link")
                         Layout.fillWidth: true
                     }
                     // Always laid out (just hidden), so the card does not change height while typing.
@@ -351,13 +354,13 @@ Kirigami.ScrollablePage {
                         }
                         enabled: textField.text.length > 0
                         icon.name: "edit-clear-all"
-                        text: i18n("Clear")
+                        text: KI18n.i18n("Clear")
                         onClicked: textField.clear()
                     }
                     // Text only: a copied image or file is pasted with the button of the card above
                     QQC2.Button {
                         icon.name: "edit-paste"
-                        text: i18n("Paste")
+                        text: KI18n.i18n("Paste")
                         enabled: page.core.clipboardHasText
                         onClicked: page.pasteText()
                     }
@@ -385,7 +388,7 @@ Kirigami.ScrollablePage {
 
                     QQC2.TextArea {
                         id: textField
-                        placeholderText: i18n("Type or paste something to send…")
+                        placeholderText: KI18n.i18n("Type or paste something to send…")
                         wrapMode: TextEdit.Wrap
                         leftPadding: Kirigami.Units.largeSpacing
                         rightPadding: Kirigami.Units.largeSpacing
@@ -420,13 +423,13 @@ Kirigami.ScrollablePage {
                             id: asTextHover
                         }
                         QQC2.ToolTip.visible: asTextHover.hovered && !page.singleLink
-                        QQC2.ToolTip.text: page.startsWithLink ? i18n("A string can only be sent as a link when it is the only content") : i18n("No valid link")
+                        QQC2.ToolTip.text: page.startsWithLink ? KI18n.i18n("A string can only be sent as a link when it is the only content") : KI18n.i18n("No valid link")
                         QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
 
                         QQC2.CheckBox {
                             id: asTextBox
 
-                            text: i18n("Send as text")
+                            text: KI18n.i18n("Send as text")
                             checked: !page.singleLink || page.sendAsText
                             enabled: page.singleLink
                             onToggled: page.sendAsText = checked
@@ -459,7 +462,7 @@ Kirigami.ScrollablePage {
             }
             Kirigami.Heading {
                 level: 3
-                text: i18n("Send to")
+                text: KI18n.i18n("Send to")
             }
             Item {
                 Layout.fillWidth: true
@@ -468,10 +471,10 @@ Kirigami.ScrollablePage {
             QQC2.ToolButton {
                 visible: page.core.wifiUpgrade
                 icon.name: "view-refresh-symbolic"
-                text: i18n("Search again")
+                text: KI18n.i18n("Search again")
                 display: QQC2.AbstractButton.IconOnly
                 QQC2.ToolTip.visible: hovered
-                QQC2.ToolTip.text: i18n("Search for nearby phones over Bluetooth again")
+                QQC2.ToolTip.text: KI18n.i18n("Search for nearby phones over Bluetooth again")
                 onClicked: page.core.scanBluetooth()
             }
         }
@@ -492,7 +495,7 @@ Kirigami.ScrollablePage {
 
                 Kirigami.Heading {
                     level: 3
-                    text: i18n("Looking for nearby devices…")
+                    text: KI18n.i18n("Looking for nearby devices…")
                     opacity: 0.7
                     horizontalAlignment: Text.AlignHCenter
                     wrapMode: Text.Wrap
@@ -508,13 +511,13 @@ Kirigami.ScrollablePage {
         MessageBox {
             visible: page.core.transferBusy && deviceRepeater.count > 0
             type: Kirigami.MessageType.Information
-            text: i18n("A transfer is in progress. You can send again when it ends")
+            text: KI18n.i18n("A transfer is in progress. You can send again when it ends")
             Layout.fillWidth: true
         }
 
         MessageBox {
             visible: deviceRepeater.count > 0 && !page.hasContent && !page.core.transferBusy
-            text: i18n("Choose or drop something to send, then pick a device")
+            text: KI18n.i18n("Choose or drop something to send, then pick a device")
             Layout.fillWidth: true
         }
 
@@ -562,7 +565,7 @@ Kirigami.ScrollablePage {
                     }
                     Kirigami.Heading {
                         level: 4
-                        text: deviceCard.name.length > 0 ? deviceCard.name : deviceCard.medium === "ble" ? i18n("Bluetooth device") : deviceCard.address
+                        text: deviceCard.name.length > 0 ? deviceCard.name : deviceCard.medium === "ble" ? KI18n.i18n("Bluetooth device") : deviceCard.address
                         elide: Text.ElideRight
                         Layout.fillWidth: true
                     }
@@ -575,7 +578,7 @@ Kirigami.ScrollablePage {
                             Layout.preferredHeight: Kirigami.Units.iconSizes.small
                         }
                         QQC2.Label {
-                            text: i18n("Bluetooth")
+                            text: KI18n.i18n("Bluetooth")
                             opacity: 0.7
                         }
                     }
@@ -588,7 +591,7 @@ Kirigami.ScrollablePage {
                             Layout.preferredHeight: Kirigami.Units.iconSizes.small
                         }
                         QQC2.Label {
-                            text: i18n("Paired")
+                            text: KI18n.i18n("Paired")
                             opacity: 0.7
                         }
                     }

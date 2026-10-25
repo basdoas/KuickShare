@@ -10,6 +10,7 @@ if [ ! -e /run/.containerenv ]; then
 fi
 
 fail() { echo "FAIL: $*" >&2; exit 1; }
+TARBALL=${TARBALL:-$(readlink -f "$1")} # set by the launcher above; CI already runs inside the container
 work=$(mktemp -d)
 trap 'rm -rf "$work"' EXIT
 # A data folder with characters that need quoting in an Exec line and in a shell word.

@@ -12,6 +12,7 @@ allow = [
     "Apache-2.0 WITH LLVM-exception",
     "BSD-2-Clause",
     "BSD-3-Clause",
+    "GPL-3.0-only",
     "GPL-3.0-or-later",
     "ISC",
     "MIT",
@@ -22,7 +23,8 @@ allow = [
 ]
 
 [bans]
-multiple-versions = "warn"
+# Upstream crates pull both RustCrypto generations, syn 2 and 3, and several getrandom versions: not ours to unify.
+multiple-versions = "allow"
 
 [sources]
 unknown-registry = "deny"

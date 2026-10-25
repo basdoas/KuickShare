@@ -30,6 +30,8 @@ tools_rev=74697c75b630d7330e77250fc13cb5ea688d9479
 [ -d "$tools" ] || git clone -q https://github.com/flatpak/flatpak-builder-tools "$tools"
 git -C "$tools" checkout -q "$tools_rev"
 python3 "$tools/cargo/flatpak-cargo-generator.py" Cargo.lock -o build/flatpak/cargo-sources.json
+# Cargo deprecated the extensionless config file; the generator still writes it.
+sed -i 's/"dest-filename": "config"/"dest-filename": "config.toml"/' build/flatpak/cargo-sources.json
 
 cd build/flatpak
 flatpak-builder --force-clean --disable-rofiles-fuse --install-deps-from=flathub --default-branch=stable \

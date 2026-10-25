@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import org.kde.kirigami as Kirigami
+import org.kde.ki18n
 
 Kirigami.ScrollablePage {
     id: page
@@ -11,7 +12,7 @@ Kirigami.ScrollablePage {
     // The transfer model narrowed by the search text and the two filters of the list header.
     readonly property var filter: core.filteredTransfers
 
-    title: i18n("Transfers")
+    title: KI18n.i18n("Transfers")
 
     // Search and filters, outside the list so they stay in place while it changes and scrolls. They stay visible
     // while nothing matches, so they can be changed back.
@@ -35,8 +36,8 @@ Kirigami.ScrollablePage {
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: bar.controlHeight
-                placeholderText: i18n("Search transfers")
-                Accessible.name: i18n("Search transfers")
+                placeholderText: KI18n.i18n("Search transfers")
+                Accessible.name: KI18n.i18n("Search transfers")
                 text: page.filter.text
                 onTextChanged: page.filter.text = text
             }
@@ -45,7 +46,7 @@ Kirigami.ScrollablePage {
 
                 Layout.preferredWidth: bar.buttonWidth
                 Layout.preferredHeight: bar.controlHeight
-                text: i18n("Clear history")
+                text: KI18n.i18n("Clear history")
                 icon.name: "edit-clear-history"
                 onClicked: clearDialog.open()
             }
@@ -64,11 +65,11 @@ Kirigami.ScrollablePage {
                     textRole: "text"
                     valueRole: "value"
                     model: [
-                        {text: i18n("All transfers"), value: "all"},
-                        {text: i18n("Received"), value: "inbound"},
-                        {text: i18n("Sent"), value: "outbound"}
+                        {text: KI18n.i18n("All transfers"), value: "all"},
+                        {text: KI18n.i18n("Received"), value: "inbound"},
+                        {text: KI18n.i18n("Sent"), value: "outbound"}
                     ]
-                    Accessible.name: i18n("Filter by direction")
+                    Accessible.name: KI18n.i18n("Filter by direction")
                     // The menu is as wide as the box.
                     popup.width: directionBox.width
                     onActivated: page.filter.direction = currentValue
@@ -89,12 +90,12 @@ Kirigami.ScrollablePage {
                     textRole: "text"
                     valueRole: "value"
                     model: [
-                        {text: i18n("Any status"), value: "all"},
-                        {text: i18n("In progress"), value: "active"},
-                        {text: i18n("Completed"), value: "done"},
-                        {text: i18n("Not completed"), value: "failed"}
+                        {text: KI18n.i18n("Any status"), value: "all"},
+                        {text: KI18n.i18n("In progress"), value: "active"},
+                        {text: KI18n.i18n("Completed"), value: "done"},
+                        {text: KI18n.i18n("Not completed"), value: "failed"}
                     ]
-                    Accessible.name: i18n("Filter by status")
+                    Accessible.name: KI18n.i18n("Filter by status")
                     popup.width: statusBox.width
                     onActivated: page.filter.status = currentValue
 
@@ -110,7 +111,7 @@ Kirigami.ScrollablePage {
 
                 Layout.preferredWidth: bar.buttonWidth
                 Layout.preferredHeight: bar.controlHeight
-                text: i18n("Reset filters")
+                text: KI18n.i18n("Reset filters")
                 icon.name: "edit-clear-all"
                 enabled: page.filter.filtered
                 onClicked: page.filter.clearFilters()
@@ -126,8 +127,8 @@ Kirigami.ScrollablePage {
 
     Kirigami.PromptDialog {
         id: clearDialog
-        title: i18n("Clear history?")
-        subtitle: page.filter.filtered ? i18n("The whole history is cleared, not only the transfers shown. Files you received are not touched") : i18n("Files you received are not touched")
+        title: KI18n.i18n("Clear history?")
+        subtitle: page.filter.filtered ? KI18n.i18n("The whole history is cleared, not only the transfers shown. Files you received are not touched") : KI18n.i18n("Files you received are not touched")
         standardButtons: Kirigami.Dialog.Ok | Kirigami.Dialog.Cancel
         onAccepted: page.core.clearHistory()
     }
@@ -184,7 +185,7 @@ Kirigami.ScrollablePage {
 
     Kirigami.Dialog {
         id: detailsDialog
-        title: i18n("Transfer details")
+        title: KI18n.i18n("Transfer details")
         standardButtons: Kirigami.Dialog.NoButton
         footer: null
         preferredWidth: Math.min(page.Window.width - Kirigami.Units.gridUnit * 2, Kirigami.Units.gridUnit * 40)
@@ -207,7 +208,7 @@ Kirigami.ScrollablePage {
                     Layout.bottomMargin: Kirigami.Units.largeSpacing
 
                     Repeater {
-                        model: [[i18n("Result"), page.detailResult], [i18n("Size"), page.detailSize]]
+                        model: [[KI18n.i18n("Result"), page.detailResult], [KI18n.i18n("Size"), page.detailSize]]
                         delegate: ColumnLayout {
                             id: detail
 
@@ -233,19 +234,19 @@ Kirigami.ScrollablePage {
                     // As tall as the two lines on the left.
                     QQC2.Button {
                         visible: page.detailIsLink
-                        text: i18n("Open link")
+                        text: KI18n.i18n("Open link")
                         icon.name: "internet-services"
                         Layout.fillHeight: true
                         onClicked: page.core.openLink(page.detailText.trim())
                     }
                     QQC2.Button {
                         visible: page.detailText.length > 0
-                        text: i18n("Copy")
+                        text: KI18n.i18n("Copy")
                         icon.name: "edit-copy"
                         Layout.fillHeight: true
                         onClicked: {
                             page.core.copyToClipboard(page.detailText);
-                            page.toasts.show(Kirigami.MessageType.Positive, i18n("Copied to clipboard"), 1500);
+                            page.toasts.show(Kirigami.MessageType.Positive, KI18n.i18n("Copied to clipboard"), 1500);
                         }
                     }
                 }
@@ -344,33 +345,33 @@ Kirigami.ScrollablePage {
         switch (state) {
         case "Starting":
             // The send was requested but the core has not reported anything yet.
-            return viaBluetooth ? i18n("Looking for the device…") : i18n("Connecting…");
+            return viaBluetooth ? KI18n.i18n("Looking for the device…") : KI18n.i18n("Connecting…");
         case "WaitingForUserConsent":
-            return i18n("Waiting for your approval");
+            return KI18n.i18n("Waiting for your approval");
         case "ReceivingFiles":
-            return i18n("Receiving…");
+            return KI18n.i18n("Receiving…");
         case "SentIntroduction":
-            return kind === "outbound" ? i18n("Waiting for the other device to accept") : i18n("Connecting…");
+            return kind === "outbound" ? KI18n.i18n("Waiting for the other device to accept") : KI18n.i18n("Connecting…");
         case "SendingFiles":
             // Over Bluetooth nothing moves until the Wi-Fi link the phone offers is up.
-            return kind === "outbound" && viaBluetooth && ackBytes === 0 ? i18n("Switching to Wi-Fi…") : i18n("Sending…");
+            return kind === "outbound" && viaBluetooth && ackBytes === 0 ? KI18n.i18n("Switching to Wi-Fi…") : KI18n.i18n("Sending…");
         case "Finished":
-            return kind === "outbound" ? i18n("Sent") : i18n("Received");
+            return kind === "outbound" ? KI18n.i18n("Sent") : KI18n.i18n("Received");
         case "Cancelled":
-            return i18n("Cancelled");
+            return KI18n.i18n("Cancelled");
         case "Rejected":
-            return kind === "outbound" ? i18n("Declined") : i18n("You declined");
+            return kind === "outbound" ? KI18n.i18n("Declined") : KI18n.i18n("You declined");
         case "Disconnected":
             // The library reports a refusal by the other device as a disconnection.
-            return kind === "outbound" && ackBytes === 0 ? i18n("Not accepted") : i18n("Interrupted");
+            return kind === "outbound" && ackBytes === 0 ? KI18n.i18n("Not accepted") : KI18n.i18n("Interrupted");
         default:
-            return i18n("Connecting…");
+            return KI18n.i18n("Connecting…");
         }
     }
 
     function describe(files, text, preview) {
         if (files.length > 0) {
-            return i18np("%1 file", "%1 files", files.length);
+            return KI18n.i18np("%1 file", "%1 files", files.length);
         }
         return text.length > 0 ? text : preview;
     }
@@ -398,10 +399,10 @@ Kirigami.ScrollablePage {
             MessageBox {
                 visible: page.core.historyBytes > page.bigHistoryBytes
                 type: Kirigami.MessageType.Warning
-                text: i18n("The history is large (%1) and may slow KuickShare down", page.core.formatSize(page.core.historyBytes))
+                text: KI18n.i18n("The history is large (%1) and may slow KuickShare down", page.core.formatSize(page.core.historyBytes))
                 actions: [
                     Kirigami.Action {
-                        text: i18n("Clear history")
+                        text: KI18n.i18n("Clear history")
                         icon.name: "edit-clear-history"
                         onTriggered: clearDialog.open()
                     }
@@ -412,7 +413,7 @@ Kirigami.ScrollablePage {
             MessageBox {
                 visible: !page.core.historyEnabled
                 type: Kirigami.MessageType.Information
-                text: i18n("History is turned off: new transfers are not saved. You can turn it on in Preferences")
+                text: KI18n.i18n("History is turned off: new transfers are not saved. You can turn it on in Preferences")
                 Layout.fillWidth: true
             }
         }
@@ -422,8 +423,8 @@ Kirigami.ScrollablePage {
             width: parent.width - Kirigami.Units.gridUnit * 4
             visible: list.count === 0
             icon.name: page.filter.sourceCount > 0 ? "edit-find" : page.core.connected ? "folder-sync" : "dialog-warning"
-            text: page.filter.sourceCount > 0 ? i18n("No matching transfers") : page.core.connected ? i18n("No transfers yet") : i18n("Starting the sharing service…")
-            explanation: page.filter.sourceCount > 0 || !page.core.connected ? "" : page.core.historyEnabled ? i18n("Sent and received transfers are listed here. Make sure this computer is visible in Preferences to receive.") : i18n("Transfers are only listed while the app is open, because the history is turned off.")
+            text: page.filter.sourceCount > 0 ? KI18n.i18n("No matching transfers") : page.core.connected ? KI18n.i18n("No transfers yet") : KI18n.i18n("Starting the sharing service…")
+            explanation: page.filter.sourceCount > 0 || !page.core.connected ? "" : page.core.historyEnabled ? KI18n.i18n("Sent and received transfers are listed here. Make sure this computer is visible in Preferences to receive.") : KI18n.i18n("Transfers are only listed while the app is open, because the history is turned off.")
         }
 
         delegate: Item {
@@ -581,7 +582,7 @@ Kirigami.ScrollablePage {
                                         id: deviceName
 
                                         level: 4
-                                        text: item.device.length > 0 ? item.device : i18n("Unknown device")
+                                        text: item.device.length > 0 ? item.device : KI18n.i18n("Unknown device")
                                         elide: Text.ElideRight
                                         // As wide as the name, but it gives way (and is elided) when the row is short.
                                         Layout.fillWidth: true
@@ -606,7 +607,7 @@ Kirigami.ScrollablePage {
                                             id: shieldHover
                                         }
                                         QQC2.ToolTip.visible: shieldHover.hovered
-                                        QQC2.ToolTip.text: i18n("Trusted")
+                                        QQC2.ToolTip.text: KI18n.i18n("Trusted")
                                         QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
                                     }
                                     Item {
@@ -615,21 +616,21 @@ Kirigami.ScrollablePage {
                                 }
                                 QQC2.Label {
                                     visible: item.inProgress
-                                    text: item.totalBytes > 0 ? i18n("%1%", Math.round(100 * item.ackBytes / item.totalBytes)) : ""
+                                    text: item.totalBytes > 0 ? KI18n.i18n("%1%", Math.round(100 * item.ackBytes / item.totalBytes)) : ""
                                     font.weight: Font.DemiBold
                                 }
                                 QQC2.ToolButton {
                                     visible: item.cancellable
                                     icon.name: "process-stop"
                                     display: QQC2.AbstractButton.IconOnly
-                                    text: i18n("Cancel")
+                                    text: KI18n.i18n("Cancel")
                                     onClicked: page.core.cancel(item.transferId)
                                 }
                                 QQC2.ToolButton {
                                     visible: !item.active
                                     icon.name: "edit-delete-remove"
                                     display: QQC2.AbstractButton.IconOnly
-                                    text: i18n("Remove from list")
+                                    text: KI18n.i18n("Remove from list")
                                     onClicked: page.core.removeTransfer(item.transferId)
                                 }
                             }
@@ -639,7 +640,7 @@ Kirigami.ScrollablePage {
                                 Layout.fillWidth: true
 
                                 QQC2.Label {
-                                    readonly property string status: item.awaitingConsent && item.pin.length > 0 ? i18n("Wants to share with you · PIN %1", item.pin) : item.inProgress ? page.stateText(item.transferState, item.kind, item.ackBytes, item.viaBluetooth).replace("…", "") + " · " + page.core.formatSize(item.totalBytes) : page.stateText(item.transferState, item.kind, item.ackBytes, item.viaBluetooth)
+                                    readonly property string status: item.awaitingConsent && item.pin.length > 0 ? KI18n.i18n("Wants to share with you · PIN %1", item.pin) : item.inProgress ? page.stateText(item.transferState, item.kind, item.ackBytes, item.viaBluetooth).replace("…", "") + " · " + page.core.formatSize(item.totalBytes) : page.stateText(item.transferState, item.kind, item.ackBytes, item.viaBluetooth)
                                     readonly property string stamp: page.when(item.time)
                                     text: stamp.length > 0 && !item.active ? status + " · " + stamp : status
                                     opacity: 0.7
@@ -648,7 +649,7 @@ Kirigami.ScrollablePage {
                                 }
                                 QQC2.Button {
                                     visible: !item.active
-                                    text: i18n("More details")
+                                    text: KI18n.i18n("More details")
                                     icon.name: "help-about-symbolic"
                                     onClicked: page.showDetails(item)
                                 }
@@ -686,29 +687,29 @@ Kirigami.ScrollablePage {
                                 }
                                 QQC2.Button {
                                     visible: item.awaitingConsent
-                                    text: i18n("Accept")
+                                    text: KI18n.i18n("Accept")
                                     icon.name: "dialog-ok-apply"
                                     onClicked: page.core.accept(item.transferId)
                                 }
                                 QQC2.Button {
                                     visible: item.awaitingConsent
-                                    text: i18n("Decline")
+                                    text: KI18n.i18n("Decline")
                                     icon.name: "dialog-cancel"
                                     onClicked: page.core.decline(item.transferId)
                                 }
                                 QQC2.Button {
                                     visible: item.receivedFiles
-                                    text: i18n("Open folder")
+                                    text: KI18n.i18n("Open folder")
                                     icon.name: "document-open-folder"
                                     onClicked: page.core.openDownloadFolder()
                                 }
                                 QQC2.Button {
                                     visible: item.hasText
-                                    text: i18n("Copy")
+                                    text: KI18n.i18n("Copy")
                                     icon.name: "edit-copy"
                                     onClicked: {
                                         page.core.copyToClipboard(item.shownText);
-                                        page.toasts.show(Kirigami.MessageType.Positive, i18n("Copied to clipboard"), 1500);
+                                        page.toasts.show(Kirigami.MessageType.Positive, KI18n.i18n("Copied to clipboard"), 1500);
                                     }
                                 }
                             }

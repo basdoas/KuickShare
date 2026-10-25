@@ -59,20 +59,59 @@ jobs:
   appimage:
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      # The Arch image published by images.yml; build-appimage.sh builds it if the pull fails (first run).
+      - name: Pull the build image
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u "${{ github.actor }}" --password-stdin
+          podman pull ghcr.io/the-beper/kuickshare-appimage:arch \
+              && podman tag ghcr.io/the-beper/kuickshare-appimage:arch localhost/kuickshare-appimage:arch \
+              || echo "::warning::kuickshare-appimage:arch not pulled, building it"
+
+      # build-appimage.sh compiles in the container with this target directory.
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: dist/tmp/arch-target
+          key: arch-target-${{ hashFiles('Cargo.lock') }}
+          restore-keys: arch-target-
+
+      - name: Build the AppImage
+        run: build/build-appimage.sh
+
+      - name: Test
+        run: build/appimage/test-appimage.sh dist/KuickShare-x86_64.AppImage
+
+  tarball:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/the-beper/kuickshare-build:fedora45
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install Rust (stable)
-        run: rustup toolchain install stable --profile minimal && rustup default stable
-
-      - name: Build the AppImage and the tarball
         run: |
-          build/build-appimage.sh
+          curl -fsSL https://sh.rustup.rs | sh -s -- -y --profile minimal
+          echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
+
+      - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
+
+      # The scripts start the build container themselves unless they find /run/.containerenv: this job already runs in it.
+      - name: Build and test the tarball
+        run: |
+          touch /run/.containerenv
           build/build-tarball.sh
-
-      - name: Test
-        run: |
-          build/appimage/test-appimage.sh dist/KuickShare-x86_64.AppImage
           build/test-tarball.sh dist/KuickShare-x86_64.tar.gz
 
   flatpak:

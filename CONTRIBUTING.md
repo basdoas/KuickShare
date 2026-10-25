@@ -66,7 +66,7 @@ build/build-env.sh build/check.sh
 | Shell | CMake build into `dist/tmp/cmake-dev`, `ctest`, `qmllint-qt6` |
 | Data | `xmllint` on the metainfo, `desktop-file-validate`, `msgfmt -c` on every catalog |
 
-CI ([`ci.yml`](.github/workflows/ci.yml)) runs the same script in the image built from [`build/Containerfile`](build/Containerfile) and published to `ghcr.io` by [`images.yml`](.github/workflows/images.yml); a pull request that changes a Containerfile is checked with the previous image until it is merged. A separate job runs `cargo deny check` ([`deny.toml`](deny.toml): advisories, licenses, sources). Dependabot proposes Cargo and action updates weekly.
+CI ([`ci.yml`](.github/workflows/ci.yml)) runs the same script in the image built from [`build/Containerfile`](build/Containerfile) and published to `ghcr.io` by [`images.yml`](.github/workflows/images.yml) (which also publishes the Flatpak and the AppImage Arch images; the AppImage and tarball jobs run in parallel and cache the Rust build); a pull request that changes a Containerfile is checked with the previous image until it is merged. A separate job runs `cargo deny check` ([`deny.toml`](deny.toml): advisories, licenses, sources). Dependabot proposes Cargo and action updates weekly.
 
 ### Hand tests with a phone (Wi-Fi upgrade and Bluetooth)
 
@@ -126,7 +126,7 @@ They run on the host, not in the container: they need `spectacle`, `dbus-daemon`
 
 ## Translations
 
-Texts in the shell are marked with `i18n()`. After adding or changing any, regenerate the catalogs:
+Texts in the shell are marked with `i18n()` (in QML `KI18n.i18n()` / `KI18n.i18np()`, with `import org.kde.ki18n`). After adding or changing any, regenerate the catalogs:
 
 ```sh
 build/build-env.sh po/extract.sh

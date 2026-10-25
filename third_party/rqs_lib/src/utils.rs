@@ -214,6 +214,37 @@ pub fn decode_point(signed: &[u8]) -> Vec<u8> {
     }
 }
 
+/// Extensions chosen when a MIME type maps to several: `mime_guess` lists them alphabetically,
+/// so the first one is often an odd one (`text/plain` starts with `asm`).
+const PREFERRED_EXTENSIONS: &[&str] = &[
+    "txt", "jpg", "png", "gif", "webp", "pdf", "mp4", "mp3", "zip", "json", "html", "csv", "apk",
+];
+
+/// The file name to save a received file under. Only the last component of the peer's name is
+/// kept, so it cannot leave the download directory (`None` if nothing usable remains). A name
+/// with no extension, or a generic one (`.tmp`, `.bin`), gets the extension `mime_type` implies
+/// when that is unambiguous.
+pub fn received_file_name(name: &str, mime_type: &str) -> Option<String> {
+    let path = Path::new(name);
+    let base = path.file_name()?.to_str()?;
+    let ext = path.extension().and_then(|e| e.to_str());
+    let generic = ext.is_some_and(|e| matches!(e.to_ascii_lowercase().as_str(), "tmp" | "bin"));
+    if (ext.is_some() && !generic) || base.starts_with('.') && ext.is_none() {
+        return Some(base.to_owned());
+    }
+    let new_ext = mime_guess::get_mime_extensions_str(mime_type)
+        .filter(|_| mime_type != "application/octet-stream")
+        .and_then(|exts| {
+            exts.iter()
+                .find(|e| PREFERRED_EXTENSIONS.contains(e))
+                .or(if exts.len() == 1 { exts.first() } else { None })
+        });
+    Some(match new_ext {
+        Some(e) => format!("{}.{e}", path.file_stem()?.to_str()?),
+        None => base.to_owned(),
+    })
+}
+
 pub fn hkdf_extract_expand(
     salt: &[u8],
     input: &[u8],
@@ -372,6 +403,35 @@ mod tests {
         assert_eq!(decode_point(&full[1..]), full);
         full[1] = 0;
         assert_eq!(decode_point(&full[2..]), full);
+    }
+
+    #[test]
+    fn received_file_name_fixes_extension_and_path() {
+        let n = received_file_name;
+        assert_eq!(
+            n("cache1.tmp", "application/pdf").as_deref(),
+            Some("cache1.pdf")
+        );
+        assert_eq!(n("cache1.TMP", "text/plain").as_deref(), Some("cache1.txt"));
+        assert_eq!(n("cache1", "image/jpeg").as_deref(), Some("cache1.jpg"));
+        assert_eq!(n("v", "video/mp4").as_deref(), Some("v.mp4"));
+        assert_eq!(
+            n("photo.jpg", "application/pdf").as_deref(),
+            Some("photo.jpg")
+        );
+        assert_eq!(n("photo.jpeg", "image/jpeg").as_deref(), Some("photo.jpeg"));
+        assert_eq!(
+            n("a.tmp", "application/octet-stream").as_deref(),
+            Some("a.tmp")
+        );
+        assert_eq!(n("a.tmp", "").as_deref(), Some("a.tmp"));
+        assert_eq!(n("a", "").as_deref(), Some("a"));
+        assert_eq!(n(".bashrc", "text/plain").as_deref(), Some(".bashrc"));
+        assert_eq!(n("../../etc/x.txt", "text/plain").as_deref(), Some("x.txt"));
+        assert_eq!(n("/abs/y.txt", "text/plain").as_deref(), Some("y.txt"));
+        assert_eq!(n("dir/", "text/plain").as_deref(), Some("dir.txt"));
+        assert_eq!(n("..", "text/plain"), None);
+        assert_eq!(n("", "text/plain"), None);
     }
 
     #[test]

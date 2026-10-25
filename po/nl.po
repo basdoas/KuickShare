@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kuickshare 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 23:55+0000\n"
+"POT-Creation-Date: 2026-10-25 10:14+0000\n"
 "PO-Revision-Date: 2026-10-20 11:00+0200\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: \n"
@@ -19,19 +19,19 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.10\n"
 
-#: src/shell/corebridge.cpp:516
+#: src/shell/corebridge.cpp:524
 msgid "Could not update Dolphin's context menu"
 msgstr "Het rechtermuisknopmenu van Dolphin kan niet worden bijgewerkt"
 
-#: src/shell/corebridge.cpp:540
+#: src/shell/corebridge.cpp:548
 msgid "Could not update the application menu"
 msgstr "Het toepassingsmenu kan niet worden bijgewerkt"
 
-#: src/shell/corebridge.cpp:551
+#: src/shell/corebridge.cpp:559
 msgid "Could not add KuickShare to the menus"
 msgstr "KuickShare kan niet worden toegevoegd aan de menu's"
 
-#: src/shell/corebridge.cpp:648
+#: src/shell/corebridge.cpp:656
 msgid ""
 "The Flatpak has no access to %1. Allow it with: flatpak override --user --"
 "filesystem=\"%1\" %2"
@@ -39,11 +39,11 @@ msgstr ""
 "Flatpak heeft geen toegang tot %1. Toegang geven kan door middel van de "
 "opdracht: flatpak override --user --filesystem=\"%1\" %2"
 
-#: src/shell/corebridge.cpp:695
+#: src/shell/corebridge.cpp:703
 msgid "Could not update the autostart entry"
 msgstr "Het automatische opstartitem kan niet worden toegevoegd"
 
-#: src/shell/corebridge.cpp:816
+#: src/shell/corebridge.cpp:824
 msgid "Only files can be shared, folders are not supported"
 msgstr "Je kunt alleen bestanden delen, geen mappen"
 
@@ -68,28 +68,28 @@ msgstr "Sluit een draaiende instantie af en neem de plaats ervan in"
 msgid "Files to send"
 msgstr "Te versturen bestanden"
 
-#: src/shell/main.cpp:248
+#: src/shell/main.cpp:260
 msgid "Open KuickShare"
 msgstr "KuickShare openen"
 
-#: src/shell/main.cpp:250
+#: src/shell/main.cpp:262
 msgid "Send files…"
 msgstr "Bestanden versturen…"
 
-#: src/shell/main.cpp:251
+#: src/shell/main.cpp:263
 msgid "Send clipboard"
 msgstr "Klembord versturen"
 
-#: src/shell/main.cpp:252 src/shell/qml/SettingsPage.qml:66
+#: src/shell/main.cpp:264 src/shell/qml/SettingsPage.qml:66
 msgid "Visible to nearby devices"
 msgstr "Zichtbaar voor apparaten in de buurt"
 
-#: src/shell/main.cpp:259 src/shell/qml/Main.qml:273
+#: src/shell/main.cpp:271 src/shell/qml/Main.qml:273
 #: src/shell/qml/SettingsPage.qml:16 src/shell/qml/ShortcutsDialog.qml:17
 msgid "Preferences"
 msgstr "Instellingen"
 
-#: src/shell/main.cpp:262 src/shell/qml/Main.qml:287
+#: src/shell/main.cpp:274 src/shell/qml/Main.qml:287
 msgid "Quit"
 msgstr "Afsluiten"
 
@@ -403,6 +403,14 @@ msgstr ""
 #: src/shell/qml/Main.qml:432
 msgid "Start service"
 msgstr "Dienst starten"
+
+#: src/shell/qml/Main.qml:451
+msgid "A new version of KuickShare is installed"
+msgstr "Er is een nieuwe versie van KuickShare geïnstalleerd"
+
+#: src/shell/qml/Main.qml:454
+msgid "Restart"
+msgstr "Herstarten"
 
 #: src/shell/qml/PairDialog.qml:22
 msgid "Pair a device"

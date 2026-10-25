@@ -41,8 +41,8 @@ use crate::sharing_nearby::{paired_key_result_frame, text_metadata};
 use crate::upgrade::{self, Reply, UpgradeEvent, UpgradeState};
 use crate::utils::{
     DeviceType, RemoteDeviceInfo, decode_point, encode_point, gen_ecdsa_keypair, gen_random,
-    get_download_dir, hkdf_extract_expand, read_length_prefix, stream_read_exact,
-    to_four_digit_string,
+    get_download_dir, hkdf_extract_expand, read_length_prefix, received_file_name,
+    stream_read_exact, to_four_digit_string,
 };
 use crate::{location_nearby_connections, sharing_nearby};
 
@@ -944,9 +944,13 @@ impl InboundRequest {
 
             for file in &introduction.file_metadata {
                 info!("File name: {}", file.name());
+                let name = received_file_name(file.name(), file.mime_type()).unwrap_or_else(|| {
+                    warn!("Unusable file name from the peer: {:?}", file.name());
+                    "file".to_owned()
+                });
 
                 let mut dest = get_download_dir();
-                dest.push(file.name());
+                dest.push(&name);
 
                 info!("Destination: {:?}", dest);
                 if dest.exists() {
@@ -959,7 +963,7 @@ impl InboundRequest {
                         // lorem (1).txt
                         // ...
                         let incremented_file_path = {
-                            let file_path = PathBuf::from(file.name());
+                            let file_path = PathBuf::from(&name);
 
                             let incremented_file_stem = format!(
                                 "{} ({counter})",
@@ -999,7 +1003,7 @@ impl InboundRequest {
                 };
                 total_bytes += info.total_size as u64;
                 self.state.transferred_files.insert(file.payload_id(), info);
-                files_name.push(file.name().to_owned());
+                files_name.push(name.clone());
             }
 
             let metadata = TransferMetadata {

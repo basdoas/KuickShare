@@ -436,6 +436,29 @@ Kirigami.ApplicationWindow {
         ]
     }
 
+    // A newer version was installed while this one runs (Flatpak, AppImage).
+    MessageBox {
+        parent: root.contentItem
+        z: 10
+        anchors {
+            top: parent.top
+            left: parent.left
+            right: parent.right
+            margins: Kirigami.Units.largeSpacing
+        }
+        visible: root.core.updateInstalled && root.core.connected
+        type: Kirigami.MessageType.Information
+        text: KI18n.i18n("A new version of KuickShare is installed")
+        actions: [
+            Kirigami.Action {
+                text: KI18n.i18n("Restart")
+                icon.name: "view-refresh"
+                enabled: !root.core.transferBusy
+                onTriggered: root.core.restartForUpdate()
+            }
+        ]
+    }
+
     DropArea {
         id: dropArea
         anchors.fill: parent

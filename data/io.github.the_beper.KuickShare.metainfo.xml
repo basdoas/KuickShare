@@ -40,6 +40,15 @@
     <control>keyboard</control>
   </recommends>
   <releases>
+    <release version="1.3.3" date="2026-10-25">
+      <description>
+        <p>Fixes computers not seeing each other.</p>
+        <ul>
+          <li>Since 1.3.2 the computer was no longer announced on the network, so phones and other computers could not see it. It is announced again.</li>
+        </ul>
+      </description>
+    </release>
+    <release version="1.3.2" date="2026-10-25"/>
     <release version="1.3.1" date="2026-10-25"/>
     <release version="1.3.0" date="2026-10-25">
       <description>

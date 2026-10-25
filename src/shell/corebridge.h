@@ -38,6 +38,7 @@ class CoreBridge : public QObject
     Q_PROPERTY(bool clipboardHasText READ clipboardHasText NOTIFY clipboardChanged)
     Q_PROPERTY(bool clipboardHasFiles READ clipboardHasFiles NOTIFY clipboardChanged)
     Q_PROPERTY(bool serviceStarting READ serviceStarting NOTIFY serviceStartingChanged)
+    Q_PROPERTY(bool updateInstalled READ updateInstalled NOTIFY updateInstalledChanged)
     Q_PROPERTY(qulonglong historyBytes READ historyBytes NOTIFY historyBytesChanged)
     Q_PROPERTY(bool trustedDevicesEnabled READ trustedDevicesEnabled WRITE setTrustedDevicesEnabled NOTIFY trustedDevicesEnabledChanged)
     Q_PROPERTY(bool trayIcon READ trayIcon WRITE setTrayIcon NOTIFY trayIconChanged)
@@ -74,6 +75,9 @@ public:
     QString qtVersion() const;
     QString frameworksVersion() const;
     bool serviceStarting() const { return m_serviceStarting; }
+    bool updateInstalled() const { return m_updateInstalled; }
+    /// A newer version was installed under this running one (set by main.cpp).
+    void setUpdateInstalled(bool installed);
     bool clipboardHasText() const { return m_clipboardHasText; }
     bool clipboardHasFiles() const { return m_clipboardHasFiles; }
     qulonglong historyBytes() const { return m_historyBytes; }
@@ -145,6 +149,8 @@ public:
     Q_INVOKABLE void clearHistory();
     Q_INVOKABLE void startService();
     Q_INVOKABLE bool transferActive() const;
+    /// Asks main.cpp to start the installed version in place of this one.
+    Q_INVOKABLE void restartForUpdate() { emit restartRequested(); }
     /// Puts every setting back to its default (history, paired and trusted devices stay).
     Q_INVOKABLE void resetSettings();
     /// The AppImage's first-launch question, "Add": the application menu entry and the Dolphin entry.
@@ -163,6 +169,8 @@ Q_SIGNALS:
     /// A live transfer finished, failed or was cancelled (not emitted for the saved history).
     void transferEnded(const QString &id, const QString &state);
     void serviceStartingChanged();
+    void updateInstalledChanged();
+    void restartRequested();
     void clipboardChanged();
     void historyBytesChanged();
     void visibleChanged();
@@ -225,6 +233,7 @@ private:
     bool m_discoveryRunning = false;
     bool m_connected = false;
     bool m_serviceStarting = false;
+    bool m_updateInstalled = false;
     bool m_clipboardHasText = false;
     bool m_clipboardHasFiles = false;
     qulonglong m_historyBytes = 0;

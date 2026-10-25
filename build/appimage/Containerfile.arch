@@ -8,8 +8,8 @@ FROM docker.io/library/archlinux:latest
 
 # quick-sharun, pinned by commit and SHA-256. It pins sharun, appimagetool, onelf and cross-libc-dlopen itself and
 # fails on a mismatch (SKIP_INTEGRITY_CHECKS is never set). Bump all of this together, after reading the diff.
-ARG QUICK_SHARUN_REV=c1765eca5a1e036d6ffbd89a56019ae6c2da5b91
-ARG QUICK_SHARUN_SHA256=b38ac233f0b56a03bb10565f6b074a43ce016939faee44ae8bb23d6e66c2d553
+ARG QUICK_SHARUN_REV=c28bb80743106fdf08cb10fb27d19d9932eb0865
+ARG QUICK_SHARUN_SHA256=4ce6946b8d6c9d0f472d41ad533e920132de66ec58d1e3445ea4f1d27376eec7
 
 RUN pacman -Syu --noconfirm --needed \
         base-devel cmake ninja extra-cmake-modules git rust protobuf dbus \

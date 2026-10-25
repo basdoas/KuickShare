@@ -29,6 +29,4 @@ multiple-versions = "allow"
 [sources]
 unknown-registry = "deny"
 unknown-git = "deny"
-allow-git = [
-    "https://github.com/Martichou/mdns-sd",
-]
+allow-git = []

@@ -20,10 +20,14 @@ KuickShare is GPL-3.0-or-later (see [LICENSE](LICENSE)). It builds on the projec
 | Bluetooth receiver (new) | `src/hdl/ble_receiver/`, `src/hdl/mod.rs`, `src/lib.rs` |
 | Bluetooth sender: windowed scan, L2CAP dial and bridge, BLE endpoints in `EndpointInfo` and `SendInfo` (new) | `src/hdl/ble_scan.rs`, `src/hdl/ble_send/`, `src/lib.rs`, `src/manager.rs`, `src/hdl/mdns_discovery.rs` |
 | BLE scanner removed (`src/hdl/ble.rs`, `btleplug`); periodic mDNS re-announce instead | `src/hdl/mdns.rs`, `src/lib.rs`, `Cargo.toml` |
+| The `MDnsServer` task logs its error instead of dropping it | `src/lib.rs` |
 | Four fixes:<br>- mDNS ignores the hotspot subnet<br>- a send reads the phone's cancel or disconnection while it writes<br>- a phone known to advertise no PSM is dialled over GATT at once<br>- a pending BLE connect is cancelled when a dial ends | `src/hdl/mdns.rs`, `src/hdl/mdns_discovery.rs`, `src/hdl/outbound.rs`, `src/utils.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/` |
+| Received file names: only the last path component is kept (a peer cannot write outside the download directory), and a missing or generic (`.tmp`, `.bin`) extension is taken from the `mime_type` when unambiguous | `src/utils.rs` (`received_file_name`), `src/hdl/inbound.rs` |
+| The receiver advertisement asks for the 1M secondary PHY (extended PDU), as its service data exceeds a legacy PDU (the failure without it is taken from upstream, *(inferred)*, not reproduced) | `src/hdl/ble_receiver/advertiser.rs` |
 | `TransferMetadata::saved_paths`: where an inbound file is saved | `src/hdl/info.rs`, `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | Per-chunk logs lowered to `trace` | `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | `sys_metrics` (AGPL-3.0) replaced by reading `/proc/sys/kernel/hostname`; `get_if_addrs` replaced by `if-addrs` | `src/utils.rs`, `src/lib.rs`, `Cargo.toml` |
+| `mdns-sd` from crates.io (0.21), and `if-addrs` 0.15 to match it, instead of the `unsolicited` branch of a fork: the periodic announcement is a second `register` call, the advertised addresses are IPv4 only through `disable_interface(IfKind::IPv6)` on the advertising daemon, probing is off (`set_requires_probe(false)`), and the host name carries the `.local.` suffix that 0.21 requires | `Cargo.toml`, `src/hdl/mdns.rs` |
 | `license = "GPL-3.0-only"` added to the manifest (upstream declares none, cargo-deny warned) | `Cargo.toml` |
 | Formatting only (and an unused test import) | `src/hdl/mdns_discovery.rs`, `src/hdl/blea.rs` (comment), `src/hdl/outbound.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/gatt_dial.rs`, `src/manager.rs` |
 
@@ -170,7 +174,7 @@ The list is generated from `cargo metadata` (`Cargo.lock`), restricted to normal
 | log | 0.4.34 | MIT OR Apache-2.0 |
 | macaddr | 1.0.1 | Apache-2.0 OR MIT |
 | matchers | 0.2.0 | MIT |
-| mdns-sd | 0.10.4 | Apache-2.0 OR MIT |
+| mdns-sd | 0.21.6 | Apache-2.0 OR MIT |
 | memchr | 2.8.3 | Unlicense OR MIT |
 | memoffset | 0.9.1 | MIT |
 | mime | 0.3.17 | MIT OR Apache-2.0 |

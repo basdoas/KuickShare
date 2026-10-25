@@ -89,20 +89,28 @@ int main(int argc, char *argv[])
     bool replacing = false;
     QTimer restartWhenIdle;
     restartWhenIdle.setInterval(30000);
+    auto startReplacing = [&](bool background)
+    {
+        if (!UpdateWatcher::startReplacement(background))
+        {
+            return false;
+        }
+        // The new instance takes this one over within seconds; if it does not, allow another try.
+        replacing = true;
+        QTimer::singleShot(15000, &app, [&replacing]
+                           { replacing = false; });
+        restartWhenIdle.stop();
+        return true;
+    };
     auto restartIfIdle = [&](bool background)
     {
         if (replacing)
         {
             return true;
         }
-        if (updatePending && !engine && !core.transferActive() && UpdateWatcher::startReplacement(background))
+        if (updatePending && !engine && !core.transferActive())
         {
-            // The new instance takes this one over within seconds; if it does not, allow another try.
-            replacing = true;
-            QTimer::singleShot(15000, &app, [&replacing]
-                               { replacing = false; });
-            restartWhenIdle.stop();
-            return true;
+            return startReplacing(background);
         }
         return false;
     };
@@ -111,9 +119,19 @@ int main(int argc, char *argv[])
     QObject::connect(&updates, &UpdateWatcher::updateInstalled, &app, [&]
                      {
         updatePending = true;
+        core.setUpdateInstalled(true);
         if (!restartIfIdle(true))
         {
             restartWhenIdle.start();
+        } });
+
+    // The "Restart" button of the update banner: the window is open, so the new instance opens it too.
+    QObject::connect(&core, &CoreBridge::restartRequested, &app, [&]
+                     {
+        // Same condition as the button: a transfer waiting for the user's consent counts as busy.
+        if (!replacing && !core.transferBusy())
+        {
+            startReplacing(false);
         } });
 
     QString startPage = parser.value(page);

@@ -136,6 +136,14 @@ void CoreBridge::startService()
     startCore();
 }
 
+void CoreBridge::setUpdateInstalled(bool installed)
+{
+    if (m_updateInstalled != installed) {
+        m_updateInstalled = installed;
+        emit updateInstalledChanged();
+    }
+}
+
 bool CoreBridge::transferActive() const
 {
     return m_transfers.hasActive();

@@ -507,7 +507,6 @@ msgstr "Panodan yapıştır"
 msgid "%1 file"
 msgid_plural "%1 files"
 msgstr[0] "%1 dosya"
-msgstr[1] "%1 dosyalar"
 
 #: src/shell/qml/SendPage.qml:296
 msgid "Add"

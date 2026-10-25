@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kuickshare 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-25 10:14+0000\n"
-"PO-Revision-Date: 2026-10-20 00:00+0000\n"
+"POT-Creation-Date: 2026-10-22 10:15+0300\n"
+"PO-Revision-Date: 2026-10-25 22:10+0300\n"
 "Last-Translator: dosulu <eray.ulu@tutamail.com>\n"
 "Language-Team: Turkish\n"
 "Language: tr\n"
@@ -397,7 +397,7 @@ msgstr "Servisi başlat"
 
 #: src/shell/qml/Main.qml:451
 msgid "A new version of KuickShare is installed"
-msgstr "KuickShare'in yeni bir sürümü kuruldu"
+msgstr "KuickShare’in yeni bir sürümü kuruldu"
 
 #: src/shell/qml/Main.qml:454
 msgid "Restart"

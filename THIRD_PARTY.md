@@ -22,6 +22,8 @@ KuickShare is GPL-3.0-or-later (see [LICENSE](LICENSE)). It builds on the projec
 | BLE scanner removed (`src/hdl/ble.rs`, `btleplug`); periodic mDNS re-announce instead | `src/hdl/mdns.rs`, `src/lib.rs`, `Cargo.toml` |
 | The `MDnsServer` task logs its error instead of dropping it | `src/lib.rs` |
 | Four fixes:<br>- mDNS ignores the hotspot subnet<br>- a send reads the phone's cancel or disconnection while it writes<br>- a phone known to advertise no PSM is dialled over GATT at once<br>- a pending BLE connect is cancelled when a dial ends | `src/hdl/mdns.rs`, `src/hdl/mdns_discovery.rs`, `src/hdl/outbound.rs`, `src/utils.rs`, `src/hdl/ble_scan.rs`, `src/hdl/ble_send/` |
+| Received file names: only the last path component is kept (a peer cannot write outside the download directory), and a missing or generic (`.tmp`, `.bin`) extension is taken from the `mime_type` when unambiguous | `src/utils.rs` (`received_file_name`), `src/hdl/inbound.rs` |
+| The receiver advertisement asks for the 1M secondary PHY (extended PDU), as its service data exceeds a legacy PDU (the failure without it is taken from upstream, *(inferred)*, not reproduced) | `src/hdl/ble_receiver/advertiser.rs` |
 | `TransferMetadata::saved_paths`: where an inbound file is saved | `src/hdl/info.rs`, `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | Per-chunk logs lowered to `trace` | `src/hdl/inbound.rs`, `src/hdl/outbound.rs` |
 | `sys_metrics` (AGPL-3.0) replaced by reading `/proc/sys/kernel/hostname`; `get_if_addrs` replaced by `if-addrs` | `src/utils.rs`, `src/lib.rs`, `Cargo.toml` |

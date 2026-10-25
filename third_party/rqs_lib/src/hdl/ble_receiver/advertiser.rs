@@ -5,7 +5,7 @@ use std::sync::Arc;
 use std::time::Duration;
 
 use anyhow::{Context, bail};
-use bluer::adv::{Advertisement, AdvertisementHandle, Type};
+use bluer::adv::{Advertisement, AdvertisementHandle, SecondaryChannel, Type};
 use bluer::{Adapter, Uuid, UuidExt};
 use futures::FutureExt;
 use tokio::sync::Notify;
@@ -36,6 +36,9 @@ pub fn advertisement(service_data: Vec<u8>) -> Advertisement {
         discoverable: Some(true),
         min_interval: Some(MIN_INTERVAL),
         max_interval: Some(MAX_INTERVAL),
+        // The service data does not fit a legacy PDU (31 bytes): without a secondary channel
+        // BlueZ may refuse the set (`Invalid Parameters`, seen upstream, not reproduced here).
+        secondary_channel: Some(SecondaryChannel::OneM),
         ..Default::default()
     }
 }
@@ -345,6 +348,7 @@ mod tests {
             Some(&vec![1, 2, 3])
         );
         assert_eq!(adv.service_data.len(), 1);
+        assert_eq!(adv.secondary_channel, Some(SecondaryChannel::OneM));
     }
 
     #[test]
